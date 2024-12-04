@@ -27,13 +27,13 @@ private:
 		START, // -> LEVEL
 		LEVEL, // -> PAUSE, END
 		CHARACTER,
-		SETTING,
 		SONG,
 		GALLERY,
 		PAUSE, // -> LEVEL
 		END
 	};
 	STATE state;
+	STATE pre_state;
 	ALLEGRO_EVENT event;
 	ALLEGRO_BITMAP *game_icon;
 	ALLEGRO_BITMAP *background;

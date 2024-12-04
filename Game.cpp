@@ -5,6 +5,9 @@
 #include "data/SoundCenter.h"
 #include "data/ImageCenter.h"
 #include "data/FontCenter.h"
+#include "Player.h"
+#include "Level.h"
+#include "Character.h"
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -12,16 +15,26 @@
 #include <allegro5/allegro_acodec.h>
 #include <vector>
 #include <cstring>
-#include "Player.h"
-#include "Level.h"
-#include "Character.h"
+#include <iostream>
 
-// fixed settings
+// fixed settings image
 constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
-constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
 constexpr char background_img_path[] = "./assets/image/StartBackground.jpg";
-constexpr char background_sound_path[] = "./assets/sound/BackgroundMusic.ogg";
+constexpr char character_img_path[] = "./assets/image/doki_character.jpg";
+constexpr char song_img_path[] = "./assets/image/song.png";
+constexpr char gallery_img_path[] = "./assets/image/gallery.png";
+constexpr char get_img_path[] = "./assets/image/get.png";
 
+//sound
+constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
+constexpr char background_sound_path[] = "./assets/sound/menu.mp3";
+constexpr char character_sound_path[] = "./assets/sound/characterbgm.mp3";
+
+//variable
+bool paint;
+double intial_time;
+ALLEGRO_BITMAP *gallery_ima;
+bool ch_init;
 /**
  * @brief Game entry.
  * @details The function processes all allegro events and update the event state to a generic data storage (i.e. DataCenter).
@@ -131,13 +144,18 @@ Game::game_init() {
 	ui = new UI();
 	ui->init();
 
-	DC->level->init();
-
+	//DC->level->init();
+	 //DC->character->init();
 	// game start
 	background = IC->get(background_img_path);
+	gallery_ima=IC->get(get_img_path);
 	debug_log("Game state: change to START\n");
 	state = STATE::START;
 	al_start_timer(timer);
+	intial_time=0;
+	paint=false;
+	ch_init=false;
+	
 }
 
 /**
@@ -150,11 +168,62 @@ bool
 Game::game_update() {
 	DataCenter *DC = DataCenter::get_instance();
 	OperationCenter *OC = OperationCenter::get_instance();
+	ImageCenter *IC = ImageCenter::get_instance();
 	SoundCenter *SC = SoundCenter::get_instance();
-	static ALLEGRO_SAMPLE_INSTANCE *background = nullptr;
+	static ALLEGRO_SAMPLE_INSTANCE *backgroundmusic = nullptr;
+	//static ALLEGRO_SAMPLE_INSTANCE *charactermusic = nullptr;
+	
+	// debug_log("pre:\n");
+	// switch(pre_state) {
+	// 	case STATE::START: {
+	// 		debug_log("start\n");
+	// 		break;
+	// 	} case STATE::LEVEL: {
+	// 		debug_log("level\n");
+	// 		break;
+	// 	} case STATE::CHARACTER: {
+	// 		debug_log("Character\n");
+	// 		break;
+	// 	}case STATE::SONG: {
+	// 		debug_log("song\n");
+	// 		break;
+	// 	}  case STATE::GALLERY: {
+	// 		debug_log("gallery\n");
+	// 		break;
+	// 	} case STATE::PAUSE: {
+	// 		debug_log("pause");
+	// 		break;
+	// 	} case STATE::END: {
+	// 	}
+	// }
+	// debug_log("now:\n");
+	// switch(state) {
+	// 	case STATE::START: {
+	// 		debug_log("start\n");
+	// 		break;
+	// 	} case STATE::LEVEL: {
+	// 		debug_log("level\n");
+	// 		break;
+	// 	} case STATE::CHARACTER: {
+	// 		debug_log("Character\n");
+	// 		break;
+	// 	}case STATE::SONG: {
+	// 		debug_log("song\n");
+	// 		break;
+	// 	}  case STATE::GALLERY: {
+	// 		debug_log("gallery\n");
+	// 		break;
+	// 	} case STATE::PAUSE: {
+	// 		debug_log("pause");
+	// 		break;
+	// 	} case STATE::END: {
+	// 	}
+	// }
 
+	
 	switch(state) {
 		case STATE::START: {
+			pre_state=state;
 			static bool is_played = false;
 			static ALLEGRO_SAMPLE_INSTANCE *instance = nullptr;
 			if(!is_played) {
@@ -167,52 +236,114 @@ Game::game_update() {
 				debug_log("<Game> state: change to LEVEL\n");
 				state = STATE::LEVEL;
 			}
+			
 			break;
 		} case STATE::LEVEL: {
+			pre_state=state;
+			background = IC->get(background_img_path);
 			static bool BGM_played = false;
 			if(!BGM_played) {
-				background = SC->play(background_sound_path, ALLEGRO_PLAYMODE_LOOP);
+				backgroundmusic = SC->play(background_sound_path, ALLEGRO_PLAYMODE_LOOP);
 				BGM_played = true;
 			}
-
+			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
+			{
+				SC->toggle_playing(backgroundmusic);
+				state=STATE::PAUSE;
+			}
+	
 			if(DC->mouse_state[1] && !DC->prev_mouse_state[1]) {
 				int mouse_x = DC->mouse.x;
                 int mouse_y = DC->mouse.y;
 
                 if (mouse_x >= 0 && mouse_x <= 899 && mouse_y >= 0 && mouse_y <= 671) {
-                    state = STATE::CARACTER;
-                }
-				else if (mouse_x >= 900 && mouse_x <= 1800 && mouse_y >= 0 && mouse_y <= 671) {
-                    state = STATE::SETTING;
+					//SC->toggle_playing(backgroundmusic);
+					pre_state=state;
+                    state = STATE::CHARACTER;
                 }
 				else if (mouse_x >= 0 && mouse_x <= 899 && mouse_y >= 671 && mouse_y <= 1344) {
+					pre_state=state;
                     state = STATE::SONG;
                 }
 				else if (mouse_x >= 900 && mouse_x <= 1800 && mouse_y >= 671 && mouse_y <= 1344) {
+					pre_state=state;
                     state = STATE::GALLERY;
                 }
 			}
-
-			// if(DC->level->remain_monsters() == 0 && DC->monsters.size() == 0) {
-			// 	debug_log("<Game> state: change to END\n");
-			// 	state = STATE::END;
-			// }
-			// if(DC->player->HP == 0) {
-			// 	debug_log("<Game> state: change to END\n");
-			// 	state = STATE::END;
-			// }
+			
 			break;
 		}case STATE::CHARACTER:{
-
-		}case STATE::SETTING:{
-
-		}case STATE::SONG:{
-
-		}case STATE::GALLERY:{
-
-		}case STATE::PAUSE: {
+			
+			background = IC->get(character_img_path);
+			// static bool BGM_played = false;
+			// if(!BGM_played) {
+			// 	charactermusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
+			// 	BGM_played = true;
+			// }
+			if(pre_state!=STATE::CHARACTER)
+			{
+				DC->character->init();
+				ch_init=true;
+			}
+			else
+			{
+				DC->character->update();
+			}
+			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
-				SC->toggle_playing(background);
+				debug_log("<Game> state: change to LEVEL\n");
+				ch_init=false;
+				state = STATE::LEVEL;
+			}
+			break;
+		}case STATE::SONG:{
+			background = IC->get(song_img_path);
+			//static bool BGM_played = false;
+			// if(!BGM_played) {
+			// 	backgroundmusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
+			// 	BGM_played = true;
+			// }
+			pre_state=state;
+			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
+			{
+				state=STATE::LEVEL;
+			}
+			break;
+		} case STATE::GALLERY:{
+			background = IC->get(gallery_img_path);
+			//static bool BGM_played = false;
+			// if(!BGM_played) {
+			// 	backgroundmusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
+			// 	BGM_played = true;
+			// }
+			if(intial_time==0)
+			{
+				intial_time=al_get_time();
+				//debug_log("initial:",intial_time,"\n");
+			}
+
+			double current=al_get_time();
+
+			if(current-intial_time<2.0)
+			{
+				paint=true;
+				//debug_log("display\n");
+			}
+			else
+			{
+				paint=false;
+				//debug_log("not display\n");
+			}
+			pre_state=state;
+			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
+			{
+				state=STATE::LEVEL;
+			}
+			break;
+		} case STATE::PAUSE: {
+			pre_state=state;
+			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
+				SC->toggle_playing(backgroundmusic);
 				debug_log("<Game> state: change to LEVEL\n");
 				state = STATE::LEVEL;
 			}
@@ -221,13 +352,15 @@ Game::game_update() {
 			return false;
 		}
 	}
+	
 	// If the game is not paused, we should progress update.
 	if(state != STATE::PAUSE) {
-		DC->player->update();
+		//DC->player->update();
 		SC->update();
 		ui->update();
+		//DC->character->update();
 		if(state != STATE::START) {
-			DC->level->update();
+			//DC->level->update();
 			OC->update();
 		}
 	}
@@ -263,14 +396,32 @@ Game::game_draw() {
 				al_map_rgb(100, 100, 100));
 		// user interface
 		if(state != STATE::START) {
-			DC->level->draw();
+			//DC->level->draw();
+			//DC->character->draw();
 			ui->draw();
 			OC->draw();
 		}
 	}
 	switch(state) {
 		case STATE::START: {
+			break;
 		} case STATE::LEVEL: {
+			break;
+		} case STATE::CHARACTER: {
+			if(ch_init)
+			{
+				DC->character->draw();
+			}
+			break;
+		}case STATE::SONG: {
+			break;
+		}  case STATE::GALLERY: {
+			 if(paint)
+			 {
+				al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(100, 0, 0, 64));
+				al_draw_bitmap(gallery_ima, 0, 0, 0);
+			 }
+			
 			break;
 		} case STATE::PAUSE: {
 			// game layout cover

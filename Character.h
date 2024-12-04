@@ -1,28 +1,36 @@
 #ifndef CHARACTER_H_INCLUDED
 #define CHARACTER_H_INCLUDED
 
-#include <allegro5/allegro.h>
-#include "UI.h"
+#include <string>
+#include <map>
+#include "Object.h"
 
-class Character
-{
-public:
-	void execute();
-public:
-	Character();
-	~Character();
-	void character_init();
-	bool character_update();
-	void character_draw();
-private:
-	ALLEGRO_EVENT event;
-	ALLEGRO_BITMAP *game_icon;
-	ALLEGRO_BITMAP *background;
-private:
-	ALLEGRO_DISPLAY *display;
-	ALLEGRO_TIMER *timer;
-	ALLEGRO_EVENT_QUEUE *event_queue;
-	UI *ui;
+enum class CharacterState{
+    LEFT,
+    RIGHT,
+    JUMP,
+    CHARACTERSTATE_MAX
 };
 
+enum class CharacterName{
+    MAYMON,
+    AURORA,
+    NORA,
+    CHARACTERNAME_MAX
+};
+
+class Character : public Object
+{
+    public:
+        void init();
+        void update();
+        void draw();
+
+    private:
+        CharacterState state=CharacterState::LEFT;
+        double speed=5;
+        std::map<CharacterState,std::string> gifPath;
+        CharacterName name;
+
+};
 #endif

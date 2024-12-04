@@ -5,6 +5,7 @@
 #include "../monsters/Monster.h"
 #include "../towers/Tower.h"
 #include "../towers/Bullet.h"
+#include "../Character.h"
 
 // fixed settings
 namespace DataSetting {
@@ -26,6 +27,7 @@ DataCenter::DataCenter() {
 	memset(prev_mouse_state, false, sizeof(prev_mouse_state));
 	player = new Player();
 	level = new Level();
+	character = new Character();
 }
 
 DataCenter::~DataCenter() {
