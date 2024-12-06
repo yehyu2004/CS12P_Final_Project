@@ -1,11 +1,9 @@
 #include "Character.h"
 #include <cstdio>
-#include <vector>
 #include <iostream>
 
 // Configuration for character levels and positions
 namespace CharacterSetting {
-    // Y-coordinates for each "level"
     static std::vector<int> y_coordinate = {
         200,
         540,
@@ -26,64 +24,106 @@ void Character::init() {
     // Default state
     state = CharacterState::LEFT;
 
-    // Start position
-    level = 1; // Middle level
+    // Start level and position
+    level = 1;
     x = 500;
     y = CharacterSetting::y_coordinate[level];
-
 }
 
 void Character::update() {
+    // Determine boundaries and levels
     bool at_left_border = (x <= 0);
     bool at_right_border = (x >= CM->get_window_width());
     bool at_top_level = (level == 0);
     bool at_lowest_level = (level == 2);
 
+    // Check movement keys and delegate
     if (IM->is_key_down(ALLEGRO_KEY_LEFT)) {
-        if(!at_left_border) x -= speed;
-        if(at_left_border && !at_top_level) {
-            level--;
-            y = CharacterSetting::y_coordinate[level];
-            x = CM->get_window_width() - 1;
-        }
-        state = CharacterState::LEFT;
+        handle_walk_left(at_left_border, at_top_level);
     }
-
     if (IM->is_key_down(ALLEGRO_KEY_RIGHT)) {
-        if(!at_right_border) x += speed;
-        if(at_right_border && !at_lowest_level) {
-            level++;
-            y = CharacterSetting::y_coordinate[level];
-            x = 1;
-        }
-        state = CharacterState::RIGHT;
+        handle_walk_right(at_right_border, at_lowest_level);
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_UP)) {
-        if(!at_top_level) {
-            level--;
-            y = CharacterSetting::y_coordinate[level];
-        }
+        handle_move_up(at_top_level);
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_DOWN)) {
-        if(!at_lowest_level) {
-            level++;
-            y = CharacterSetting::y_coordinate[level];
-        }
+        handle_move_down(at_lowest_level);
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_SPACE)) {
-        state = CharacterState::JUMP;
+        handle_jump();
     }
 }
 
 void Character::draw() {
-    ALGIF_ANIMATION *gif = RM->get_gif(gifKeys[state]);
-    // Draw the GIF centered at (x,y)
-    // algif_draw_gif is from algif5 library.
+    ALGIF_ANIMATION *gif = current_gif();
+    // Draw the GIF centered at (x, y)
     algif_draw_gif(gif, 
                    x - gif->width / 2.0f, 
                    y - gif->height / 2.0f, 
                    0);
+}
+
+void Character::get_bounding_box(float &out_x, float &out_y, float &out_w, float &out_h) const {
+    ALGIF_ANIMATION *gif = RM->get_gif(gifKeys.at(state));
+    float w = gif->width;
+    float h = gif->height;
+    // Character is drawn centered at (x,y)
+    // so bounding box: top-left corner is (x - w/2, y - h/2)
+    out_x = x - w / 2.0f;
+    out_y = y - h / 2.0f;
+    out_w = w;
+    out_h = h;
+}
+
+// Private helper functions:
+
+void Character::handle_walk_left(bool at_left_border, bool at_top_level) {
+    if (!at_left_border) {
+        x -= speed;
+    }
+    // If at left border and not top level, move up a level to the left
+    if (at_left_border && !at_top_level) {
+        level--;
+        y = CharacterSetting::y_coordinate[level];
+        x = CM->get_window_width() - 1;
+    }
+    state = CharacterState::LEFT;
+}
+
+void Character::handle_walk_right(bool at_right_border, bool at_lowest_level) {
+    if (!at_right_border) {
+        x += speed;
+    }
+    // If at right border and not lowest level, move down a level to the right
+    if (at_right_border && !at_lowest_level) {
+        level++;
+        y = CharacterSetting::y_coordinate[level];
+        x = 1;
+    }
+    state = CharacterState::RIGHT;
+}
+
+void Character::handle_move_up(bool at_top_level) {
+    if (!at_top_level) {
+        level--;
+        y = CharacterSetting::y_coordinate[level];
+    }
+    // Not changing state here unless you want a "climb" or "up" state
+}
+
+void Character::handle_move_down(bool at_lowest_level) {
+    if (!at_lowest_level) {
+        level++;
+        y = CharacterSetting::y_coordinate[level];
+    }
+    // Not changing state here unless you want a "down" state
+}
+
+void Character::handle_jump() {
+    // Just change state to jump for now
+    state = CharacterState::JUMP;
 }
