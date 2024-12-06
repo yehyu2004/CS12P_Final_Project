@@ -27,14 +27,15 @@ void Character::init()
     DataCenter *DC = DataCenter::get_instance();
     GIFCenter *GIFC = GIFCenter::get_instance();
     ALGIF_ANIMATION *gif = GIFC->get(gifPath[state]);
+    int startWidth = 500, startHeight = 500;
     // shape.reset(new Rectangle{DC->window_width / 2,
     //                           DC->window_height / 2,
     //                           DC->window_width / 2 + gif->width,
     //                           DC->window_height / 2 + gif->height});
-    shape.reset(new Rectangle{500,
-                              500,
-                              500+ gif->width,
-                              500 + gif->height});
+    shape.reset(new Rectangle{startWidth,
+                              startHeight,
+                              startWidth+ gif->width,
+                              startHeight + gif->height});
 }
 void Character::update()
 {

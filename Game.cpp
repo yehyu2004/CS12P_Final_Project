@@ -136,6 +136,7 @@ Game::game_init() {
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
 	// init sound setting
+	bgm_playing = false;
 	SC->init();
 
 	// init font setting
@@ -158,6 +159,13 @@ Game::game_init() {
 	
 }
 
+
+void Game::change_state(Game::STATE new_state){
+	pre_state = state;
+	bgm_playing = false;
+	state = new_state;
+}
+
 /**
  * @brief The function processes all data update.
  * @details The behavior of the whole game body is determined by its state.
@@ -170,57 +178,34 @@ Game::game_update() {
 	OperationCenter *OC = OperationCenter::get_instance();
 	ImageCenter *IC = ImageCenter::get_instance();
 	SoundCenter *SC = SoundCenter::get_instance();
-	static ALLEGRO_SAMPLE_INSTANCE *backgroundmusic = nullptr;
-	//static ALLEGRO_SAMPLE_INSTANCE *charactermusic = nullptr;
-	
 	
 	switch(state) {
 		case STATE::START: {
 			pre_state=state;
-			static bool is_played = false;
-			static ALLEGRO_SAMPLE_INSTANCE *instance = nullptr;
-			if(!is_played) {
-				instance = SC->play(game_start_sound_path, ALLEGRO_PLAYMODE_ONCE);
-				DC->level->load_level(1);
-				is_played = true;
-			}
-
-			if(!SC->is_playing(instance)) {
-				debug_log("<Game> state: change to LEVEL\n");
-				state = STATE::LEVEL;
-			}
-			
+			state = STATE::LEVEL;
 			break;
 		} case STATE::LEVEL: {
 			pre_state=state;
 			background = IC->get(background_img_path);
-			static bool BGM_played = false;
-			if(!BGM_played) {
-				backgroundmusic = SC->play(background_sound_path, ALLEGRO_PLAYMODE_LOOP);
-				BGM_played = true;
+
+			if(!bgm_playing) {
+				if(music != nullptr) SC->toggle_playing(music);
+				music = SC->play(background_sound_path, ALLEGRO_PLAYMODE_LOOP);
+				bgm_playing = true;
 			}
-			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
-			{
-				SC->toggle_playing(backgroundmusic);
-				state=STATE::PAUSE;
-			}
-	
+
 			if(DC->mouse_state[1] && !DC->prev_mouse_state[1]) {
 				int mouse_x = DC->mouse.x;
                 int mouse_y = DC->mouse.y;
 
                 if (mouse_x >= 0 && mouse_x <= 899 && mouse_y >= 0 && mouse_y <= 671) {
-					//SC->toggle_playing(backgroundmusic);
-					pre_state=state;
-                    state = STATE::CHARACTER;
+					change_state(STATE::CHARACTER);
                 }
 				else if (mouse_x >= 0 && mouse_x <= 899 && mouse_y >= 671 && mouse_y <= 1344) {
-					pre_state=state;
-                    state = STATE::SONG;
+					change_state(STATE::SONG);
                 }
 				else if (mouse_x >= 900 && mouse_x <= 1800 && mouse_y >= 671 && mouse_y <= 1344) {
-					pre_state=state;
-                    state = STATE::GALLERY;
+					change_state(STATE::GALLERY);
                 }
 			}
 			
@@ -228,24 +213,24 @@ Game::game_update() {
 		}case STATE::CHARACTER:{
 			
 			background = IC->get(character_img_path);
-			// static bool BGM_played = false;
-			// if(!BGM_played) {
-			// 	charactermusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
-			// 	BGM_played = true;
-			// }
+			if(!bgm_playing) {
+				if(music != nullptr) SC->toggle_playing(music);
+				music = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
+				bgm_playing = true;
+			}
 	
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
 				debug_log("<Game> state: change to LEVEL\n");
 				ch_init=false;
-				state = STATE::LEVEL;
+				change_state(STATE::LEVEL);
 			}
 			break;
 		}case STATE::SONG:{
 			background = IC->get(song_img_path);
 			//static bool BGM_played = false;
 			// if(!BGM_played) {
-			// 	backgroundmusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
+			// 	music = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
 			// 	BGM_played = true;
 			// }
 			if(pre_state!=STATE::SONG)
@@ -268,7 +253,7 @@ Game::game_update() {
 			background = IC->get(gallery_img_path);
 			//static bool BGM_played = false;
 			// if(!BGM_played) {
-			// 	backgroundmusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
+			// 	music = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
 			// 	BGM_played = true;
 			// }
 			if(intial_time==0)
@@ -296,7 +281,7 @@ Game::game_update() {
 		} case STATE::PAUSE: {
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
-				SC->toggle_playing(backgroundmusic);
+				SC->toggle_playing(music);
 				debug_log("<Game> state: change to LEVEL\n");
 				state = STATE::LEVEL;
 			}
