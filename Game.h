@@ -24,7 +24,7 @@
 constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
 constexpr char background_img_path[] = "./assets/image/start_background_without_buttons.png";
 constexpr char character_img_path[] = "./assets/image/doki_character.jpg";
-constexpr char song_img_path[] = "./assets/image/song.png";
+constexpr char song_img_path[] = "./assets/image/select_background.png";
 constexpr char gallery_img_path[] = "./assets/image/gallery.png";
 constexpr char get_img_path[] = "./assets/image/get.png";
 constexpr char play_music_path[] = "./assets/ui/play_music.png";

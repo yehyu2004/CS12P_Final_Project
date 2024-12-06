@@ -13,9 +13,9 @@ namespace CharacterSetting
         "jump",
     };
     static std::vector<int> y_coordinate = {
-        345,
-        694,
-        1024,
+        200,
+        540,
+        880,
     };
 }
 void Character::init()
@@ -39,6 +39,7 @@ void Character::init()
                               startY,
                               startX + gif->width,
                               startY + gif->height});
+    shape->update_center_y(CharacterSetting::y_coordinate[level]);
 
     // std::cout << "CENTER!  " << shape->center_y() << std::endl;
 }
@@ -48,9 +49,9 @@ void Character::update()
     bool at_right_border = (shape->center_x() >= DC->window_width);
     bool at_top_level = (level == 0);
     bool at_lowest_level = (level == 2);
+    // std::cout << "CENTER!  " << shape->center_y() << std::endl;
     // std::cout << "CURRENT LEVEL  " << level << std::endl;
-    if (DC->key_state[ALLEGRO_KEY_LEFT])
-    {   
+    if (DC->key_state[ALLEGRO_KEY_LEFT]){   
         if(!at_left_border){
             shape->update_center_x(shape->center_x() - speed);
         }
@@ -61,8 +62,8 @@ void Character::update()
         }
         state = CharacterState::LEFT;
     }
-    else if (DC->key_state[ALLEGRO_KEY_RIGHT])
-    {
+
+    if (DC->key_state[ALLEGRO_KEY_RIGHT]){
         if(!at_right_border){
             shape->update_center_x(shape->center_x() + speed);
         }
@@ -73,21 +74,19 @@ void Character::update()
         }
         state = CharacterState::RIGHT;
     }
-    else if (DC->key_state[ALLEGRO_KEY_UP])
-    {   
+    if (DC->key_state[ALLEGRO_KEY_UP]){   
         if(!at_top_level){
             level--;
             shape->update_center_y(CharacterSetting::y_coordinate[level]);
         }
-    }else if (DC->key_state[ALLEGRO_KEY_DOWN])
-    {
+    }
+    if (DC->key_state[ALLEGRO_KEY_DOWN]){
         if(!at_lowest_level){
             level++;
             shape->update_center_y(CharacterSetting::y_coordinate[level]);
         }
     }
-    else if (DC->key_state[ALLEGRO_KEY_SPACE])
-    {
+    if (DC->key_state[ALLEGRO_KEY_SPACE]){
         // shape->update_center_x(shape->center_x() - speed);
         state = CharacterState::JUMP;
     }

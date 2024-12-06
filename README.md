@@ -1,9 +1,33 @@
-# Introduction to Programming II Final Project Template
-> Class Hwann-Tzong Chen
+# Introduction to Programming II Final Project
 
-## Resource
+## Team Member:
 
-- Allegro download: [https ://github.com/liballeg/allegro5/releases](https://github.com/liballeg/allegro5/releases)
-- Allegro install(Mac OS): [https://hackmd.io/@Jiza/BkZ5a5yL2](https://hackmd.io/@Jiza/BkZ5a5yL2)
-- Allegro documentation: [https://www.allegro.cc/manual/5/index.html](https://www.allegro.cc/manual/5/index.html)
-- GIF convert: [https://ezgif.com/video-to-gif](https://ezgif.com/video-to-gif)
+葉婕羽、黃湘晴
+
+## Build Instructions:
+
+### Windows:
+
+1. Install the necessary packages & libraries
+Install CMake: https://cmake.org/download/
+Download the necessary libraries: 
+- Allegro 5 (Game Library)
+- MinGW (To compile C++)
+
+2. Place this project in a folder with the following structure:
+
+```css
+src/
+	allegro/
+	MinGW/
+	CS12P_Final_Project
+```
+
+3. Open terminal at the path `src/CS12P_Final_Project`, and run 
+
+```bash
+make
+```
+
+4. Double click on `src/CS12P_Final_Project/game.exe`, and have fun!
+

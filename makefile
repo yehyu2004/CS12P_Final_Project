@@ -1,5 +1,5 @@
 OUT := game
-CC := ../MinGW/bin/g++
+CC := ./MinGW/bin/g++
 
 CXXFLAGS := -Wall -std=c++17 -O2
 SOURCE := $(wildcard *.cpp */*.cpp)
@@ -8,8 +8,8 @@ RM_OBJ :=
 RM_OUT := 
 
 ifeq ($(OS), Windows_NT) # Windows OS
-	ALLEGRO_PATH := ../allegro
-	export Path := ../MinGW/bin;$(Path)
+	ALLEGRO_PATH := ./library/allegro
+	export Path := ./MinGW/bin;$(Path)
 
 	ALLEGRO_FLAGS_RELEASE := -I$(ALLEGRO_PATH)/include -L$(ALLEGRO_PATH)/lib/liballegro_monolith.dll.a
 	ALLEGRO_DLL_PATH_RELEASE := $(ALLEGRO_PATH)/lib/liballegro_monolith.dll.a

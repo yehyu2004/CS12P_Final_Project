@@ -4,7 +4,6 @@
 //variable
 bool paint;
 double intial_time;
-ALLEGRO_BITMAP *gallery_ima;
 bool ch_init;
 /**
  * @brief Game entry.
@@ -118,8 +117,6 @@ Game::game_init() {
 	//DC->level->init();
 	 //DC->character->init();
 	// game start
-	background = IC->get(background_img_path);
-	gallery_ima=IC->get(get_img_path);
 	debug_log("Game state: change to START\n");
 	state = STATE::START;
 	al_start_timer(timer);
@@ -148,13 +145,14 @@ void Game::change_music(const char* song_path){
 void Game::check_current_state(){
 	switch(state) {
 		case STATE::START: {
+			background = IC->get(background_img_path);
 			change_state(STATE::LEVEL);
 			break;
 		} case STATE::LEVEL: {
 			if(pre_state != state){
-				Button play_music(1300, 500, play_music_path, [&](){change_state(STATE::CHARACTER);});
-				Button gallery(1300, 700, gallery_path, [&](){change_state(STATE::SONG);});
-				Button character(1300, 900, character_path, [&](){change_state(STATE::GALLERY);});
+				Button play_music(1300, 500, play_music_path, [&](){change_state(STATE::SONG);});
+				Button gallery(1300, 700, gallery_path, [&](){change_state(STATE::GALLERY);});
+				Button character(1300, 900, character_path, [&](){change_state(STATE::CHARACTER);});
 				current_buttons.push_back(play_music);
 				current_buttons.push_back(gallery);
 				current_buttons.push_back(character);
@@ -269,8 +267,8 @@ void Game::check_current_state(){
 bool
 Game::game_update() {
 	// debug_log("RUN!!!\n");
+
 	check_current_state();
-	
 	
 	// If the game is not paused, we should progress update.
 	if(state != STATE::PAUSE) {
@@ -295,16 +293,16 @@ void Game::draw_background(){
 	if(state != STATE::END) {
 		// background
 		al_draw_bitmap(background, 0, 0, 0);
-		if(DC->game_field_length < DC->window_width)
-			al_draw_filled_rectangle(
-				DC->game_field_length, 0,
-				DC->window_width, DC->window_height,
-				al_map_rgb(100, 100, 100));
-		if(DC->game_field_length < DC->window_height)
-			al_draw_filled_rectangle(
-				0, DC->game_field_length,
-				DC->window_width, DC->window_height,
-				al_map_rgb(100, 100, 100));
+		// if(DC->game_field_length < DC->window_width)
+		// 	al_draw_filled_rectangle(
+		// 		DC->game_field_length, 0,
+		// 		DC->window_width, DC->window_height,
+		// 		al_map_rgb(100, 100, 100));
+		// if(DC->game_field_length < DC->window_height)
+		// 	al_draw_filled_rectangle(
+		// 		0, DC->game_field_length,
+		// 		DC->window_width, DC->window_height,
+		// 		al_map_rgb(100, 100, 100));
 		// user interface
 		if(state != STATE::START) {
 			//DC->level->draw();
@@ -322,7 +320,7 @@ void Game::draw_states(){
 		} case STATE::CHARACTER: {
 			break;
 		}case STATE::SONG: {
-			al_draw_filled_rectangle(0, 450, 1800 ,500, al_map_rgba(100, 0, 0, 100));
+			// al_draw_filled_rectangle(0, 450, 1800 ,500, al_map_rgba(100, 0, 0, 100));
 			if(ch_init)
 			{
 				DC->character->draw();
@@ -330,11 +328,11 @@ void Game::draw_states(){
 			
 			break;
 		}  case STATE::GALLERY: {
-			 if(paint)
-			 {
-				al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(100, 0, 0, 64));
-				al_draw_bitmap(gallery_ima, 0, 0, 0);
-			 }
+			 // if(paint)
+			 // {
+			// 	// al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(100, 0, 0, 64));
+			// 	al_draw_bitmap(gallery_ima, 0, 0, 0);
+			 // }
 			
 			break;
 		} case STATE::PAUSE: {

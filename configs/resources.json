@@ -1,0 +1,26 @@
+{
+    "fonts": {
+        "caviar_dreams": "./assets/font/Caviar_Dreams_Bold.ttf",
+        "courier_new": "./assets/font/courbd.ttf"
+    },
+    "images": {
+        "game_icon": "./assets/image/game_icon.png",
+        "background": "./assets/image/start_background_without_buttons.png",
+        "character_img": "./assets/image/doki_character.jpg",
+        "song_background": "./assets/image/select_background.png",
+        "gallery_background": "./assets/image/gallery.png",
+        "play_music_btn": "./assets/ui/play_music.png",
+        "gallery_btn": "./assets/ui/gallery.png",
+        "character_btn": "./assets/ui/character.png"
+    },
+    "gifs": {
+        "character_left": "./assets/gif/Character/character_left.gif",
+        "character_right": "./assets/gif/Character/character_right.gif",
+        "character_jump": "./assets/gif/Character/character_jump.gif"
+    },
+    "sounds": {
+        "game_start_sound": "./assets/sound/growl.wav",
+        "menu_bgm": "./assets/sound/menu.mp3",
+        "character_bgm": "./assets/sound/characterbgm.mp3"
+    }
+}
