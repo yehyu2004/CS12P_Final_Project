@@ -1,7 +1,5 @@
 #include "Button.h"
 
-#include <iostream> // TODO: REMOVE!!!
-
 
 void Button::init() {
 	IC = ImageCenter::get_instance();
@@ -17,7 +15,6 @@ void Button::update(int mouse_x, int mouse_y) {
 	} else {
 		mouse_touched = false;
 	}
-	std::cout << "LOCATION: " << x << " " << y << " SIZE: " << width << " " << height << " MOUSE LOC: " << mouse_x << " " << mouse_y << " " << mouse_touched << "\n";	
 }
 
 void Button::clicked() {
@@ -31,10 +28,7 @@ void Button::clicked() {
 
 
 void Button::draw() {
-		std::cout << "MOUSE TOUCH!!! " << mouse_touched << "\n";
 	if (mouse_touched) {
-		std::cout << "DRAW BIGGER! " << "\n";
-
 		al_draw_scaled_bitmap(
 		    image,                // source bitmap
 		    0, 0,                 // source region: start at top-left corner
