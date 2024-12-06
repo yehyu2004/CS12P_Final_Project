@@ -173,53 +173,6 @@ Game::game_update() {
 	static ALLEGRO_SAMPLE_INSTANCE *backgroundmusic = nullptr;
 	//static ALLEGRO_SAMPLE_INSTANCE *charactermusic = nullptr;
 	
-	// debug_log("pre:\n");
-	// switch(pre_state) {
-	// 	case STATE::START: {
-	// 		debug_log("start\n");
-	// 		break;
-	// 	} case STATE::LEVEL: {
-	// 		debug_log("level\n");
-	// 		break;
-	// 	} case STATE::CHARACTER: {
-	// 		debug_log("Character\n");
-	// 		break;
-	// 	}case STATE::SONG: {
-	// 		debug_log("song\n");
-	// 		break;
-	// 	}  case STATE::GALLERY: {
-	// 		debug_log("gallery\n");
-	// 		break;
-	// 	} case STATE::PAUSE: {
-	// 		debug_log("pause");
-	// 		break;
-	// 	} case STATE::END: {
-	// 	}
-	// }
-	// debug_log("now:\n");
-	// switch(state) {
-	// 	case STATE::START: {
-	// 		debug_log("start\n");
-	// 		break;
-	// 	} case STATE::LEVEL: {
-	// 		debug_log("level\n");
-	// 		break;
-	// 	} case STATE::CHARACTER: {
-	// 		debug_log("Character\n");
-	// 		break;
-	// 	}case STATE::SONG: {
-	// 		debug_log("song\n");
-	// 		break;
-	// 	}  case STATE::GALLERY: {
-	// 		debug_log("gallery\n");
-	// 		break;
-	// 	} case STATE::PAUSE: {
-	// 		debug_log("pause");
-	// 		break;
-	// 	} case STATE::END: {
-	// 	}
-	// }
-
 	
 	switch(state) {
 		case STATE::START: {
@@ -280,15 +233,7 @@ Game::game_update() {
 			// 	charactermusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
 			// 	BGM_played = true;
 			// }
-			if(pre_state!=STATE::CHARACTER)
-			{
-				DC->character->init();
-				ch_init=true;
-			}
-			else
-			{
-				DC->character->update();
-			}
+	
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
 				debug_log("<Game> state: change to LEVEL\n");
@@ -303,6 +248,16 @@ Game::game_update() {
 			// 	backgroundmusic = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
 			// 	BGM_played = true;
 			// }
+			if(pre_state!=STATE::SONG)
+			{
+				DC->character->init();
+				ch_init=true;
+			}
+			else
+			{
+				DC->character->update();
+			}
+
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
 			{
@@ -319,7 +274,6 @@ Game::game_update() {
 			if(intial_time==0)
 			{
 				intial_time=al_get_time();
-				//debug_log("initial:",intial_time,"\n");
 			}
 
 			double current=al_get_time();
@@ -327,13 +281,12 @@ Game::game_update() {
 			if(current-intial_time<2.0)
 			{
 				paint=true;
-				//debug_log("display\n");
 			}
 			else
 			{
 				paint=false;
-				//debug_log("not display\n");
 			}
+
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
 			{
@@ -408,12 +361,14 @@ Game::game_draw() {
 		} case STATE::LEVEL: {
 			break;
 		} case STATE::CHARACTER: {
+			break;
+		}case STATE::SONG: {
+			al_draw_filled_rectangle(0, 450, 1800 ,500, al_map_rgba(100, 0, 0, 100));
 			if(ch_init)
 			{
 				DC->character->draw();
 			}
-			break;
-		}case STATE::SONG: {
+			
 			break;
 		}  case STATE::GALLERY: {
 			 if(paint)

@@ -27,10 +27,14 @@ void Character::init()
     DataCenter *DC = DataCenter::get_instance();
     GIFCenter *GIFC = GIFCenter::get_instance();
     ALGIF_ANIMATION *gif = GIFC->get(gifPath[state]);
-    shape.reset(new Rectangle{DC->window_width / 2,
-                              DC->window_height / 2,
-                              DC->window_width / 2 + gif->width,
-                              DC->window_height / 2 + gif->height});
+    // shape.reset(new Rectangle{DC->window_width / 2,
+    //                           DC->window_height / 2,
+    //                           DC->window_width / 2 + gif->width,
+    //                           DC->window_height / 2 + gif->height});
+    shape.reset(new Rectangle{500,
+                              500,
+                              500+ gif->width,
+                              500 + gif->height});
 }
 void Character::update()
 {
@@ -45,11 +49,11 @@ void Character::update()
         shape->update_center_x(shape->center_x() + speed);
         state = CharacterState::RIGHT;
     }
-    // else if (DC->key_state[ALLEGRO_KEY_SPACE])
-    // {
-    //     // shape->update_center_x(shape->center_x() - speed);
-    //     state = CharacterState::JUMP;
-    // }
+    else if (DC->key_state[ALLEGRO_KEY_SPACE])
+    {
+        // shape->update_center_x(shape->center_x() - speed);
+        state = CharacterState::JUMP;
+    }
     
 }
 void Character::draw()
