@@ -242,6 +242,8 @@ void Game::check_current_state(){
 				state = STATE::LEVEL;
 			}
 			break;
+		} case STATE::END: {
+			
 		}
 	}
 }

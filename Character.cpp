@@ -1,9 +1,9 @@
 #include "Character.h"
-#include "data/DataCenter.h"
-#include "data/GIFCenter.h"
-#include "algif5/algif.h"
-#include "shapes/Rectangle.h"
 #include <stdio.h>
+#include <vector>
+
+#include <iostream>
+
 namespace CharacterSetting
 {
     static constexpr char gif_root_path[50] = "./assets/gif/Character";
@@ -12,9 +12,16 @@ namespace CharacterSetting
         "right",
         "jump",
     };
+    static std::vector<int> y_coordinate = {
+        345,
+        694,
+        1024,
+    };
 }
 void Character::init()
 {
+    DC = DataCenter::get_instance();
+    GIFC = GIFCenter::get_instance();
     for (size_t type = 0; type < static_cast<size_t>(CharacterState::CHARACTERSTATE_MAX); ++type)
     {
         char buffer[50];
@@ -24,31 +31,60 @@ void Character::init()
             CharacterSetting::gif_postfix[static_cast<int>(type)]);
         gifPath[static_cast<CharacterState>(type)] = std::string{buffer};
     }
-    DataCenter *DC = DataCenter::get_instance();
-    GIFCenter *GIFC = GIFCenter::get_instance();
     ALGIF_ANIMATION *gif = GIFC->get(gifPath[state]);
-    int startWidth = 500, startHeight = 500;
-    // shape.reset(new Rectangle{DC->window_width / 2,
-    //                           DC->window_height / 2,
-    //                           DC->window_width / 2 + gif->width,
-    //                           DC->window_height / 2 + gif->height});
-    shape.reset(new Rectangle{startWidth,
-                              startHeight,
-                              startWidth+ gif->width,
-                              startHeight + gif->height});
+    level = 1;
+    int startX = 500, startY = 500;
+
+    shape.reset(new Rectangle{startX,
+                              startY,
+                              startX + gif->width,
+                              startY + gif->height});
+
+    // std::cout << "CENTER!  " << shape->center_y() << std::endl;
 }
 void Character::update()
 {
-    DataCenter *DC = DataCenter::get_instance();
+    bool at_left_border = (shape->center_x() <= 0);
+    bool at_right_border = (shape->center_x() >= DC->window_width);
+    bool at_top_level = (level == 0);
+    bool at_lowest_level = (level == 2);
+    // std::cout << "CURRENT LEVEL  " << level << std::endl;
     if (DC->key_state[ALLEGRO_KEY_LEFT])
-    {
-        shape->update_center_x(shape->center_x() - speed);
+    {   
+        if(!at_left_border){
+            shape->update_center_x(shape->center_x() - speed);
+        }
+        if(at_left_border && !at_top_level){
+            level--;
+            shape->update_center_y(CharacterSetting::y_coordinate[level]);
+            shape->update_center_x(DC->window_width - 1);
+        }
         state = CharacterState::LEFT;
     }
     else if (DC->key_state[ALLEGRO_KEY_RIGHT])
     {
-        shape->update_center_x(shape->center_x() + speed);
+        if(!at_right_border){
+            shape->update_center_x(shape->center_x() + speed);
+        }
+        if(at_right_border && !at_lowest_level){
+            level++;
+            shape->update_center_y(CharacterSetting::y_coordinate[level]);
+            shape->update_center_x(1);
+        }
         state = CharacterState::RIGHT;
+    }
+    else if (DC->key_state[ALLEGRO_KEY_UP])
+    {   
+        if(!at_top_level){
+            level--;
+            shape->update_center_y(CharacterSetting::y_coordinate[level]);
+        }
+    }else if (DC->key_state[ALLEGRO_KEY_DOWN])
+    {
+        if(!at_lowest_level){
+            level++;
+            shape->update_center_y(CharacterSetting::y_coordinate[level]);
+        }
     }
     else if (DC->key_state[ALLEGRO_KEY_SPACE])
     {
@@ -59,7 +95,6 @@ void Character::update()
 }
 void Character::draw()
 {
-    GIFCenter *GIFC = GIFCenter::get_instance();
     ALGIF_ANIMATION *gif = GIFC->get(gifPath[state]);
     algif_draw_gif(gif,
                    shape->center_x() - gif->width / 2,
