@@ -2,9 +2,6 @@
 
 
 void Button::init() {
-	IC = ImageCenter::get_instance();
-
-	image = IC->get(image_path);
 	width = al_get_bitmap_width(image);
 	height = al_get_bitmap_height(image);
 }

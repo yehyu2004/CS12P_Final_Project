@@ -4,38 +4,44 @@
 #include <string>
 #include <map>
 #include "Object.h"
-#include "data/DataCenter.h"
-#include "data/GIFCenter.h"
+#include "core/ConfigManager.h"
+#include "core/ResourceManager.h"
+#include "core/InputManager.h"
 #include "algif5/algif.h"
-#include "shapes/Rectangle.h"
 
-enum class CharacterState{
+// States representing the character's direction/movement.
+enum class CharacterState {
     LEFT,
     RIGHT,
     JUMP,
     CHARACTERSTATE_MAX
 };
 
-enum class CharacterName{
+enum class CharacterName {
     MAYMON,
     AURORA,
     NORA,
     CHARACTERNAME_MAX
 };
 
-class Character : public Object
-{
-    private:
-        CharacterState state=CharacterState::LEFT;
-        double speed=5;
-        std::map<CharacterState,std::string> gifPath;
-        CharacterName name;
-        DataCenter *DC;
-        GIFCenter *GIFC;
-        int level;
-    public:
-        void init();
-        void update();
-        void draw();
+class Character : public Object {
+private:
+    CharacterState state = CharacterState::LEFT;
+    double speed = 5.0;
+    std::map<CharacterState, std::string> gifKeys;
+    CharacterName name;
+    ResourceManager *RM;
+    ConfigManager *CM;
+    InputManager *IM;
+
+    // Instead of a shape, store character position and level directly.
+    float x, y;
+    int level;
+
+public:
+    void init();
+    void update();
+    void draw();
 };
+
 #endif

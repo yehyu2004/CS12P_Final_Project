@@ -1,382 +1,326 @@
 #include "Game.h"
 
-
 //variable
 bool paint;
 double intial_time;
 bool ch_init;
-/**
- * @brief Game entry.
- * @details The function processes all allegro events and update the event state to a generic data storage (i.e. DataCenter).
- * For timer event, the game_update and game_draw function will be called if and only if the current is timer.
- */
-void
-Game::execute() {
-	// DC = DataCenter::get_instance();
-	// main game loop
-	bool run = true;
-	while(run) {
-		// process all events here
-		al_wait_for_event(event_queue, &event);
-		switch(event.type) {
-			case ALLEGRO_EVENT_TIMER: {
-				run &= game_update();
-				game_draw();
-				break;
-			} case ALLEGRO_EVENT_DISPLAY_CLOSE: { // stop game
-				run = false;
-				break;
-			} case ALLEGRO_EVENT_KEY_DOWN: {
-				DC->key_state[event.keyboard.keycode] = true;
-				break;
-			} case ALLEGRO_EVENT_KEY_UP: {
-				DC->key_state[event.keyboard.keycode] = false;
-				break;
-			} case ALLEGRO_EVENT_MOUSE_AXES: {
-				DC->mouse.x = event.mouse.x;
-				DC->mouse.y = event.mouse.y;
-				break;
-			} case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-				DC->mouse_state[event.mouse.button] = true;
-				break;
-			} case ALLEGRO_EVENT_MOUSE_BUTTON_UP: {
-				DC->mouse_state[event.mouse.button] = false;
-				break;
-			} default: break;
-		}
-	}
+
+void Game::execute() {
+    IM = InputManager::get_instance();
+    IM->init();
+
+    bool run = true;
+    while(run) {
+        al_wait_for_event(event_queue, &event);
+
+        switch(event.type) {
+            case ALLEGRO_EVENT_TIMER: {
+                run &= game_update();
+                game_draw();
+
+                // After updating the game, update input states to previous for next frame
+                IM->update();
+                break;
+            }
+            case ALLEGRO_EVENT_DISPLAY_CLOSE: {
+                run = false;
+                break;
+            }
+            case ALLEGRO_EVENT_KEY_DOWN: {
+                IM->on_key_down(event.keyboard.keycode);
+                break;
+            }
+            case ALLEGRO_EVENT_KEY_UP: {
+                IM->on_key_up(event.keyboard.keycode);
+                break;
+            }
+            case ALLEGRO_EVENT_MOUSE_AXES: {
+                IM->on_mouse_move(event.mouse.x, event.mouse.y);
+                break;
+            }
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+                IM->on_mouse_button_down(event.mouse.button);
+                break;
+            }
+            case ALLEGRO_EVENT_MOUSE_BUTTON_UP: {
+                IM->on_mouse_button_up(event.mouse.button);
+                break;
+            }
+            default:
+                break;
+        }
+    }
 }
 
-/**
- * @brief Initialize all allegro addons and the game body.
- * @details Only one timer is created since a game and all its data should be processed synchronously.
- */
 Game::Game() {
-	DC = DataCenter::get_instance();
-	SC = SoundCenter::get_instance();
-	IC = ImageCenter::get_instance();
-	FC = FontCenter::get_instance();
-	GAME_ASSERT(al_init(), "failed to initialize allegro.");
+    RM = ResourceManager::get_instance();
+    CM = ConfigManager::get_instance();
 
-	// initialize allegro addons
-	bool addon_init = true;
-	addon_init &= al_init_primitives_addon();
-	addon_init &= al_init_font_addon();
-	addon_init &= al_init_ttf_addon();
-	addon_init &= al_init_image_addon();
-	addon_init &= al_init_acodec_addon();
-	GAME_ASSERT(addon_init, "failed to initialize allegro addons.");
+    CM->load_from_file("configs/config.json");
+    RM->load_config("configs/resources.json");
 
-	// initialize events
-	bool event_init = true;
-	event_init &= al_install_keyboard();
-	event_init &= al_install_mouse();
-	event_init &= al_install_audio();
-	GAME_ASSERT(event_init, "failed to initialize allegro events.");
+    // Initialize Allegro
+    GAME_ASSERT(al_init(), "failed to initialize allegro.");
 
-	al_set_new_display_flags(ALLEGRO_NOFRAME);
-	// initialize game body
-	GAME_ASSERT(
-		display = al_create_display(DC->window_width, DC->window_height),
-		"failed to create display.");
-	al_set_window_position(display, 0, 0);
-	GAME_ASSERT(
-		timer = al_create_timer(1.0 / DC->FPS),
-		"failed to create timer.");
-	GAME_ASSERT(
-		event_queue = al_create_event_queue(),
-		"failed to create event queue.");
+    // Initialize allegro addons
+    bool addon_init = true;
+    addon_init &= al_init_primitives_addon();
+    addon_init &= al_init_font_addon();
+    addon_init &= al_init_ttf_addon();
+    addon_init &= al_init_image_addon();
+    addon_init &= al_init_acodec_addon();
+    GAME_ASSERT(addon_init, "failed to initialize allegro addons.");
 
-	debug_log("Game initialized.\n");
-	game_init();
+    // Initialize events
+    bool event_init = true;
+    event_init &= al_install_keyboard();
+    event_init &= al_install_mouse();
+    event_init &= al_install_audio();
+    GAME_ASSERT(event_init, "failed to initialize allegro events.");
+
+    // Use the config manager values
+    int width = CM->get_window_width();
+    int height = CM->get_window_height();
+    double FPS = CM->get_fps();
+
+    RM->init_audio(); // Initialize audio through RM
+
+    al_set_new_display_flags(ALLEGRO_NOFRAME);
+    GAME_ASSERT(
+        display = al_create_display(width, height),
+        "failed to create display."
+    );
+    al_set_window_position(display, 0, 0);
+    GAME_ASSERT(
+        timer = al_create_timer(1.0 / FPS),
+        "failed to create timer."
+    );
+    GAME_ASSERT(
+        event_queue = al_create_event_queue(),
+        "failed to create event queue."
+    );
+
+    debug_log("Game initialized.\n");
+    game_init();
 }
 
-/**
- * @brief Initialize all auxiliary resources.
- */
-void
-Game::game_init() {
-	// set window icon
-	game_icon = IC->get(game_icon_img_path);
-	al_set_display_icon(display, game_icon);
+void Game::game_init() {
+    // Load the game icon from RM
+    game_icon = RM->get_image("game_icon");
+    al_set_display_icon(display, game_icon);
 
-	// register events to event_queue
+    // Register events
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
-	// init sound setting
-	bgm_playing = false;
-	music = nullptr;
-	SC->init();
+    bgm_playing = false;
+    music = nullptr;
 
-	// init font setting
-	FC->init();
+    // Initialize character now that IM and CM are ready if needed
+    character.init();
 
-	//DC->level->init();
-	 //DC->character->init();
-	// game start
-	debug_log("Game state: change to START\n");
-	state = STATE::START;
-	al_start_timer(timer);
-	intial_time=0;
-	paint=false;
-	ch_init=false;
-	
+    // Start state
+    debug_log("Game state: change to START\n");
+    state = STATE::START;
+    al_start_timer(timer);
+    intial_time = 0;
+    paint = false;
+    ch_init = false;
 }
 
-
-void Game::change_state(Game::STATE new_state){
-	pre_state = state;
-	current_buttons.clear();
-	bgm_playing = false;
-	state = new_state;
+void Game::change_state(Game::STATE new_state) {
+    pre_state = state;
+    current_buttons.clear();
+    bgm_playing = false;
+    state = new_state;
 }
 
-void Game::change_music(const char* song_path){
-	if(!bgm_playing) {
-		if(music != nullptr) SC->toggle_playing(music);
-		music = SC->play(song_path, ALLEGRO_PLAYMODE_LOOP);
-		bgm_playing = true;
-	}
+void Game::change_music(const char* sound_key) {
+    if (!bgm_playing) {
+        if (music != nullptr) {
+            RM->toggle_sound(music);
+        }
+        // Play sound by key defined in resources.json
+        music = RM->play_sound(sound_key, ALLEGRO_PLAYMODE_LOOP);
+        bgm_playing = true;
+    }
 }
 
-void Game::check_current_state(){
-	switch(state) {
-		case STATE::START: {
-			background = IC->get(background_img_path);
-			change_state(STATE::LEVEL);
-			break;
-		} case STATE::LEVEL: {
-			if(pre_state != state){
-				Button play_music(1300, 500, play_music_path, [&](){change_state(STATE::SONG);});
-				Button gallery(1300, 700, gallery_path, [&](){change_state(STATE::GALLERY);});
-				Button character(1300, 900, character_path, [&](){change_state(STATE::CHARACTER);});
-				current_buttons.push_back(play_music);
-				current_buttons.push_back(gallery);
-				current_buttons.push_back(character);
-				pre_state=state;
-			}
-
-
-
-			background = IC->get(background_img_path);
-			change_music(background_sound_path);
-
-			bool leftClicked = (DC->mouse_state[1] && !DC->prev_mouse_state[1]);
-			int mouse_x = DC->mouse.x;
-            int mouse_y = DC->mouse.y;
-
-			for(Button &button : current_buttons){
-            	button.update(mouse_x, mouse_y);
+void Game::check_current_state() {
+    // For one-shot actions, use IM->was_key_pressed().
+    // For continuous movement, use IM->is_key_down().
+    switch(state) {
+        case STATE::START: {
+            background = RM->get_image("background");
+            change_state(STATE::LEVEL);
+            break;
+        }
+        case STATE::LEVEL: {
+            if(pre_state != state) {
+                Button play_music_btn(1300, 500, RM->get_image(play_music_key), [&](){change_state(STATE::SONG);});
+                Button gallery_btn(1300, 700, RM->get_image(gallery_key), [&](){change_state(STATE::GALLERY);});
+                Button character_btn(1300, 900, RM->get_image(character_key), [&](){change_state(STATE::CHARACTER);});
+                current_buttons.push_back(play_music_btn);
+                current_buttons.push_back(gallery_btn);
+                current_buttons.push_back(character_btn);
+                pre_state = state;
             }
 
-			if(leftClicked) {
+            background = RM->get_image("background");
+            change_music("menu_bgm");
 
-                for(Button &button : current_buttons){
-                	button.clicked();
+            bool leftClicked = IM->was_mouse_pressed(1);
+            int mouse_x = IM->get_mouse_x();
+            int mouse_y = IM->get_mouse_y();
+
+            for(Button &button : current_buttons) {
+                button.update(mouse_x, mouse_y);
+            }
+
+            if(leftClicked) {
+                for(Button &button : current_buttons) {
+                    button.clicked();
                 }
-			}
-			
-			break;
-		}case STATE::CHARACTER:{
-			
-			background = IC->get(character_img_path);
-			change_music(character_sound_path);
-	
-			pre_state=state;
-			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
-				debug_log("<Game> state: change to LEVEL\n");
-				ch_init=false;
-				change_state(STATE::LEVEL);
-			}
-			break;
-		}case STATE::SONG:{
-			background = IC->get(song_img_path);
-			//static bool BGM_played = false;
-			// if(!BGM_played) {
-			// 	music = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
-			// 	BGM_played = true;
-			// }
-			if(pre_state!=STATE::SONG)
-			{
-				DC->character->init();
-				ch_init=true;
-			}
-			else
-			{
-				DC->character->update();
-			}
+            }
 
-			pre_state=state;
-			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
-			{
-				change_state(STATE::LEVEL);
-			}
-			break;
-		} case STATE::GALLERY:{
-			background = IC->get(gallery_img_path);
-			//static bool BGM_played = false;
-			// if(!BGM_played) {
-			// 	music = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
-			// 	BGM_played = true;
-			// }
-			if(intial_time==0)
-			{
-				intial_time=al_get_time();
-			}
+            break;
+        }
+        case STATE::CHARACTER: {
+            background = RM->get_image("character_img");
+            change_music("character_bgm");
 
-			double current=al_get_time();
+            pre_state = state;
+            if(IM->was_key_pressed(ALLEGRO_KEY_P)) {
+                debug_log("<Game> state: change to LEVEL\n");
+                ch_init=false;
+                change_state(STATE::LEVEL);
+            }
+            break;
+        }
+        case STATE::SONG: {
+            background = RM->get_image("song_background");
+            if(pre_state != STATE::SONG) {
+                character.init();
+                ch_init = true;
+            } else {
+                character.update();
+            }
 
-			if(current-intial_time<2.0)
-			{
-				paint=true;
-			}
-			else
-			{
-				paint=false;
-			}
+            pre_state = state;
+            if(IM->was_key_pressed(ALLEGRO_KEY_0)) {
+                change_state(STATE::LEVEL);
+            }
+            break;
+        }
+        case STATE::GALLERY: {
+            background = RM->get_image("gallery_background");
+            if(intial_time == 0) {
+                intial_time = al_get_time();
+            }
 
-			pre_state=state;
-			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
-			{
-				change_state(STATE::LEVEL);
-			}
-			break;
-		} case STATE::PAUSE: {
-			pre_state=state;
-			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
-				SC->toggle_playing(music);
-				debug_log("<Game> state: change to LEVEL\n");
-				state = STATE::LEVEL;
-			}
-			break;
-		} case STATE::END: {
+            double current = al_get_time();
+            paint = (current - intial_time < 2.0);
 
-		}
-	}
+            pre_state = state;
+            if(IM->was_key_pressed(ALLEGRO_KEY_0)) {
+                change_state(STATE::LEVEL);
+            }
+            break;
+        }
+        case STATE::PAUSE: {
+            pre_state = state;
+            if(IM->was_key_pressed(ALLEGRO_KEY_P)) {
+                RM->toggle_sound(music);
+                debug_log("<Game> state: change to LEVEL\n");
+                state = STATE::LEVEL;
+            }
+            break;
+        }
+        case STATE::END: {
+            // Handle end state
+            break;
+        }
+    }
 }
 
-/**
- * @brief The function processes all data update.
- * @details The behavior of the whole game body is determined by its state.
- * @return Whether the game should keep running (true) or reaches the termination criteria (false).
- * @see Game::STATE
- */
-bool
-Game::game_update() {
-	// debug_log("RUN!!!\n");
+bool Game::game_update() {
+    check_current_state();
 
-	check_current_state();
-	
-	// If the game is not paused, we should progress update.
-	if(state != STATE::PAUSE) {
-		//DC->player->update();
-		SC->update();
-		//DC->character->update();
-		if(state != STATE::START) {
-			//DC->level->update();
-		}
-	}
+    if(state != STATE::PAUSE) {
+        RM->update_sounds();
+        // Update other game logic if needed
+    }
 
-	if(state == STATE::END){
-		return false;
-	}
-	// game_update is finished. The states of current frame will be previous states of the next frame.
-	memcpy(DC->prev_key_state, DC->key_state, sizeof(DC->key_state));
-	memcpy(DC->prev_mouse_state, DC->mouse_state, sizeof(DC->mouse_state));
-	return true;
+    if(state == STATE::END) {
+        return false;
+    }
+
+    // No DataCenter used now, no need to memcpy states
+    return true;
 }
 
-void Game::draw_background(){
-	if(state != STATE::END) {
-		// background
-		al_draw_bitmap(background, 0, 0, 0);
-		// if(DC->game_field_length < DC->window_width)
-		// 	al_draw_filled_rectangle(
-		// 		DC->game_field_length, 0,
-		// 		DC->window_width, DC->window_height,
-		// 		al_map_rgb(100, 100, 100));
-		// if(DC->game_field_length < DC->window_height)
-		// 	al_draw_filled_rectangle(
-		// 		0, DC->game_field_length,
-		// 		DC->window_width, DC->window_height,
-		// 		al_map_rgb(100, 100, 100));
-		// user interface
-		if(state != STATE::START) {
-			//DC->level->draw();
-			//DC->character->draw();
-		}
-	}
+void Game::draw_background() {
+    if(state != STATE::END) {
+        al_draw_bitmap(background, 0, 0, 0);
+    }
 }
 
-void Game::draw_states(){
-	switch(state) {
-		case STATE::START: {
-			break;
-		} case STATE::LEVEL: {
-			break;
-		} case STATE::CHARACTER: {
-			break;
-		}case STATE::SONG: {
-			// al_draw_filled_rectangle(0, 450, 1800 ,500, al_map_rgba(100, 0, 0, 100));
-			if(ch_init)
-			{
-				DC->character->draw();
-			}
-			
-			break;
-		}  case STATE::GALLERY: {
-			 // if(paint)
-			 // {
-			// 	// al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(100, 0, 0, 64));
-			// 	al_draw_bitmap(gallery_ima, 0, 0, 0);
-			 // }
-			
-			break;
-		} case STATE::PAUSE: {
-			// game layout cover
-			al_draw_filled_rectangle(0, 0, DC->window_width, DC->window_height, al_map_rgba(50, 50, 50, 64));
-			al_draw_text(
-				FC->caviar_dreams[FontSize::LARGE], al_map_rgb(255, 255, 255),
-				DC->window_width/2., DC->window_height/2.,
-				ALLEGRO_ALIGN_CENTRE, "GAME PAUSED");
-			break;
-		} case STATE::END: {
-		}
-	}
+void Game::draw_states() {
+    switch(state) {
+        case STATE::START:
+            break;
+        case STATE::LEVEL:
+            break;
+        case STATE::CHARACTER:
+            break;
+        case STATE::SONG:
+            if(ch_init) {
+                character.draw();
+            }
+            break;
+        case STATE::GALLERY:
+            // Additional drawing if needed
+            break;
+        case STATE::PAUSE: {
+            al_draw_filled_rectangle(0, 0, CM->get_window_width(), CM->get_window_height(), al_map_rgba(50, 50, 50, 64));
+            ALLEGRO_FONT* pause_font = RM->get_font("caviar_dreams", 36);
+            al_draw_text(
+                pause_font, al_map_rgb(255, 255, 255),
+                CM->get_window_width()/2.0, CM->get_window_height()/2.0,
+                ALLEGRO_ALIGN_CENTRE, "GAME PAUSED"
+            );
+            break;
+        }
+        case STATE::END:
+            break;
+    }
 }
 
 void Game::draw_buttons() {
-	for(Button &button : current_buttons){
-		button.draw();
-	}
+    for(Button &button : current_buttons) {
+        button.draw();
+    }
 }
 
-/**
- * @brief Draw the whole game and objects.
- */
 void Game::game_draw() {
-	// Flush the screen first.
-	al_clear_to_color(al_map_rgb(100, 100, 100));
-	draw_background();
-	draw_states();
-	draw_buttons();
+    al_clear_to_color(al_map_rgb(100, 100, 100));
+    draw_background();
+    draw_states();
+    draw_buttons();
 
-	ALLEGRO_COLOR green = al_map_rgb(0, 255, 0);
-	al_draw_circle(
-	    DC->mouse.x, DC->mouse.y,    // Center coordinates (cx, cy)
-	    5,         // Radius
-	    green,       // Color
-	    5.0          // Line thickness
-	);
-	
-	al_flip_display();
+    ALLEGRO_COLOR green = al_map_rgb(0, 255, 0);
+    // Draw mouse position
+    int mx = IM->get_mouse_x();
+    int my = IM->get_mouse_y();
+    al_draw_circle(mx, my, 5, green, 5.0);
+
+    al_flip_display();
 }
 
 Game::~Game() {
-	al_destroy_display(display);
-	al_destroy_timer(timer);
-	al_destroy_event_queue(event_queue);
+    al_destroy_display(display);
+    al_destroy_timer(timer);
+    al_destroy_event_queue(event_queue);
 }

@@ -1,92 +1,71 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
 
-
-#include "data/DataCenter.h"
-#include "data/OperationCenter.h"
-#include "data/SoundCenter.h"
-#include "data/ImageCenter.h"
-#include "data/FontCenter.h"
+#include "core/ResourceManager.h"
+#include "core/ConfigManager.h"
+#include "core/InputManager.h"
+#include "Character.h"
+#include "objects/Button.h"
+#include "Utils.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_acodec.h>
-#include "Utils.h"
-#include "Character.h"
-#include "objects/Button.h"
 #include <vector>
-#include <cstring>
 #include <iostream>
 
-// fixed settings image
-constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
-constexpr char background_img_path[] = "./assets/image/start_background_without_buttons.png";
-constexpr char character_img_path[] = "./assets/image/doki_character.jpg";
-constexpr char song_img_path[] = "./assets/image/select_background.png";
-constexpr char gallery_img_path[] = "./assets/image/gallery.png";
-constexpr char get_img_path[] = "./assets/image/get.png";
-constexpr char play_music_path[] = "./assets/ui/play_music.png";
-constexpr char gallery_path[] = "./assets/ui/gallery.png";
-constexpr char character_path[] = "./assets/ui/character.png";
+constexpr char play_music_key[] = "play_music_btn";
+constexpr char gallery_key[] = "gallery_btn";
+constexpr char character_key[] = "character_btn";
 
-//sound
-constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
-constexpr char background_sound_path[] = "./assets/sound/menu.mp3";
-constexpr char character_sound_path[] = "./assets/sound/characterbgm.mp3";
-
-
-/**
- * @brief Main class that runs the whole game.
- * @details All game procedures must be processed through this class.
- */
-class Game
-{
+class Game {
 private:
-	/**
-	 * @brief States of the game process in game_update.
-	 * @see Game::game_update()
-	 */
-	enum class STATE {
-		START, // -> LEVEL
-		LEVEL, // -> PAUSE, END
-		CHARACTER,
-		SONG,
-		GALLERY,
-		PAUSE, // -> LEVEL
-		END
-	};
-	bool bgm_playing;
-	STATE state;
-	STATE pre_state;
-	ALLEGRO_EVENT event;
-	ALLEGRO_BITMAP *game_icon;
-	ALLEGRO_BITMAP *background;
-	ALLEGRO_SAMPLE_INSTANCE *music;
-	DataCenter *DC;
-	SoundCenter *SC;
-	ImageCenter *IC;
-	FontCenter *FC;
-	std::vector<Button> current_buttons;
-private:
-	ALLEGRO_DISPLAY *display;
-	ALLEGRO_TIMER *timer;
-	ALLEGRO_EVENT_QUEUE *event_queue;
+    enum class STATE {
+        START,
+        LEVEL,
+        CHARACTER,
+        SONG,
+        GALLERY,
+        PAUSE,
+        END
+    };
+
+    bool bgm_playing;
+    STATE state;
+    STATE pre_state;
+    ALLEGRO_EVENT event;
+    ALLEGRO_BITMAP *game_icon;
+    ALLEGRO_BITMAP *background;
+    ALLEGRO_SAMPLE_INSTANCE *music;
+
+    ResourceManager *RM;
+    ConfigManager *CM;
+    InputManager *IM;
+
+    std::vector<Button> current_buttons;
+
+    ALLEGRO_DISPLAY *display;
+    ALLEGRO_TIMER *timer;
+    ALLEGRO_EVENT_QUEUE *event_queue;
+
+    // If you previously had DC->character, now we manage character here:
+    Character character;
+
 public:
-	void execute();
-public:
-	Game();
-	~Game();
-	void game_init();
-	bool game_update();
-	void game_draw();
-	void draw_background();
-	void draw_states();
-	void draw_buttons();
-	void change_state(Game::STATE new_state);
-	void change_music(const char* song_path);
-	void check_current_state();
+    Game();
+    ~Game();
+    void execute();
+    void game_init();
+    bool game_update();
+    void game_draw();
+    void draw_background();
+    void draw_states();
+    void draw_buttons();
+    void change_state(Game::STATE new_state);
+    void change_music(const char* sound_key);
+    void check_current_state();
 };
 
 #endif
