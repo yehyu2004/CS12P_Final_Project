@@ -1,5 +1,5 @@
 OUT := game
-CC := g++
+CC := ../MinGW/bin/g++
 
 CXXFLAGS := -Wall -std=c++17 -O2
 SOURCE := $(wildcard *.cpp */*.cpp)
