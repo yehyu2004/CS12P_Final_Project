@@ -34,23 +34,21 @@ void Character::update() {
     // Determine boundaries and levels
     bool at_left_border = (x <= 0);
     bool at_right_border = (x >= CM->get_window_width());
-    bool at_top_level = (level == 0);
-    bool at_lowest_level = (level == 2);
 
     // Check movement keys and delegate
     if (IM->is_key_down(ALLEGRO_KEY_LEFT)) {
-        handle_walk_left(at_left_border, at_top_level);
+        handle_walk_left(at_left_border);
     }
     if (IM->is_key_down(ALLEGRO_KEY_RIGHT)) {
-        handle_walk_right(at_right_border, at_lowest_level);
+        handle_walk_right(at_right_border);
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_UP)) {
-        handle_move_up(at_top_level);
+        handle_move_up();
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_DOWN)) {
-        handle_move_down(at_lowest_level);
+        handle_move_down();
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_SPACE)) {
@@ -81,46 +79,40 @@ void Character::get_bounding_box(float &out_x, float &out_y, float &out_w, float
 
 // Private helper functions:
 
-void Character::handle_walk_left(bool at_left_border, bool at_top_level) {
+void Character::handle_walk_left(bool at_left_border) {
     if (!at_left_border) {
         x -= speed;
     }
     // If at left border and not top level, move up a level to the left
-    if (at_left_border && !at_top_level) {
-        level--;
+    if (at_left_border) {
+        level = (level - 1 + 3) % 3;
         y = CharacterSetting::y_coordinate[level];
         x = CM->get_window_width() - 1;
     }
     state = CharacterState::LEFT;
 }
 
-void Character::handle_walk_right(bool at_right_border, bool at_lowest_level) {
+void Character::handle_walk_right(bool at_right_border) {
     if (!at_right_border) {
         x += speed;
     }
     // If at right border and not lowest level, move down a level to the right
-    if (at_right_border && !at_lowest_level) {
-        level++;
+    if (at_right_border) {
+        level = (level + 1) % 3;
         y = CharacterSetting::y_coordinate[level];
         x = 1;
     }
     state = CharacterState::RIGHT;
 }
 
-void Character::handle_move_up(bool at_top_level) {
-    if (!at_top_level) {
-        level--;
-        y = CharacterSetting::y_coordinate[level];
-    }
-    // Not changing state here unless you want a "climb" or "up" state
+void Character::handle_move_up() {
+    level = (level - 1 + 3) % 3;
+    y = CharacterSetting::y_coordinate[level];
 }
 
-void Character::handle_move_down(bool at_lowest_level) {
-    if (!at_lowest_level) {
-        level++;
-        y = CharacterSetting::y_coordinate[level];
-    }
-    // Not changing state here unless you want a "down" state
+void Character::handle_move_down() {
+    level = (level + 1) % 3;
+    y = CharacterSetting::y_coordinate[level];
 }
 
 void Character::handle_jump() {

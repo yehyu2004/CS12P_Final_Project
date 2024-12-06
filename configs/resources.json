@@ -5,10 +5,10 @@
     },
     "images": {
         "game_icon": "./assets/image/game_icon.png",
-        "background": "./assets/image/start_background_without_buttons.png",
-        "character_img": "./assets/image/doki_character.jpg",
-        "song_background": "./assets/image/select_background.png",
-        "gallery_background": "./assets/image/gallery.png",
+        "menu_background": "./assets/background/start_background_without_buttons.png",
+        "character_background": "./assets/background/character_background.jpg",
+        "song_background": "./assets/background/select_background.png",
+        "gallery_background": "./assets/background/gallery_background.jpg",
         "play_music_btn": "./assets/ui/play_music.png",
         "gallery_btn": "./assets/ui/gallery.png",
         "character_btn": "./assets/ui/character.png"
@@ -19,7 +19,6 @@
         "character_jump": "./assets/gif/Character/character_jump.gif"
     },
     "sounds": {
-        "game_start_sound": "./assets/sound/growl.wav",
         "menu_bgm": "./assets/sound/menu.mp3",
         "character_bgm": "./assets/sound/characterbgm.mp3"
     }
