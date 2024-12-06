@@ -1,6 +1,12 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
 
+
+#include "data/DataCenter.h"
+#include "data/OperationCenter.h"
+#include "data/SoundCenter.h"
+#include "data/ImageCenter.h"
+#include "data/FontCenter.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
@@ -8,6 +14,27 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_acodec.h>
 #include "UI.h"
+#include "Utils.h"
+#include "Player.h"
+#include "Level.h"
+#include "Character.h"
+#include <vector>
+#include <cstring>
+#include <iostream>
+
+// fixed settings image
+constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
+constexpr char background_img_path[] = "./assets/image/StartBackground.jpg";
+constexpr char character_img_path[] = "./assets/image/doki_character.jpg";
+constexpr char song_img_path[] = "./assets/image/song.png";
+constexpr char gallery_img_path[] = "./assets/image/gallery.png";
+constexpr char get_img_path[] = "./assets/image/get.png";
+
+//sound
+constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
+constexpr char background_sound_path[] = "./assets/sound/menu.mp3";
+constexpr char character_sound_path[] = "./assets/sound/characterbgm.mp3";
+
 
 /**
  * @brief Main class that runs the whole game.
@@ -36,6 +63,10 @@ private:
 	ALLEGRO_BITMAP *game_icon;
 	ALLEGRO_BITMAP *background;
 	ALLEGRO_SAMPLE_INSTANCE *music;
+	DataCenter *DC;
+	SoundCenter *SC;
+	ImageCenter *IC;
+	FontCenter *FC;
 private:
 	ALLEGRO_DISPLAY *display;
 	ALLEGRO_TIMER *timer;
@@ -50,6 +81,7 @@ public:
 	bool game_update();
 	void game_draw();
 	void change_state(Game::STATE new_state);
+	void change_music(const char* song_path);
 };
 
 #endif

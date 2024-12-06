@@ -1,34 +1,5 @@
 #include "Game.h"
-#include "Utils.h"
-#include "data/DataCenter.h"
-#include "data/OperationCenter.h"
-#include "data/SoundCenter.h"
-#include "data/ImageCenter.h"
-#include "data/FontCenter.h"
-#include "Player.h"
-#include "Level.h"
-#include "Character.h"
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_acodec.h>
-#include <vector>
-#include <cstring>
-#include <iostream>
 
-// fixed settings image
-constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
-constexpr char background_img_path[] = "./assets/image/StartBackground.jpg";
-constexpr char character_img_path[] = "./assets/image/doki_character.jpg";
-constexpr char song_img_path[] = "./assets/image/song.png";
-constexpr char gallery_img_path[] = "./assets/image/gallery.png";
-constexpr char get_img_path[] = "./assets/image/get.png";
-
-//sound
-constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
-constexpr char background_sound_path[] = "./assets/sound/menu.mp3";
-constexpr char character_sound_path[] = "./assets/sound/characterbgm.mp3";
 
 //variable
 bool paint;
@@ -42,7 +13,7 @@ bool ch_init;
  */
 void
 Game::execute() {
-	DataCenter *DC = DataCenter::get_instance();
+	DC = DataCenter::get_instance();
 	// main game loop
 	bool run = true;
 	while(run) {
@@ -82,7 +53,10 @@ Game::execute() {
  * @details Only one timer is created since a game and all its data should be processed synchronously.
  */
 Game::Game() {
-	DataCenter *DC = DataCenter::get_instance();
+	DC = DataCenter::get_instance();
+	SC = SoundCenter::get_instance();
+	IC = ImageCenter::get_instance();
+	FC = FontCenter::get_instance();
 	GAME_ASSERT(al_init(), "failed to initialize allegro.");
 
 	// initialize allegro addons
@@ -121,10 +95,6 @@ Game::Game() {
  */
 void
 Game::game_init() {
-	DataCenter *DC = DataCenter::get_instance();
-	SoundCenter *SC = SoundCenter::get_instance();
-	ImageCenter *IC = ImageCenter::get_instance();
-	FontCenter *FC = FontCenter::get_instance();
 	// set window icon
 	game_icon = IC->get(game_icon_img_path);
 	al_set_display_icon(display, game_icon);
@@ -166,6 +136,14 @@ void Game::change_state(Game::STATE new_state){
 	state = new_state;
 }
 
+void Game::change_music(const char* song_path){
+	if(!bgm_playing) {
+		if(music != nullptr) SC->toggle_playing(music);
+		music = SC->play(song_path, ALLEGRO_PLAYMODE_LOOP);
+		bgm_playing = true;
+	}
+}
+
 /**
  * @brief The function processes all data update.
  * @details The behavior of the whole game body is determined by its state.
@@ -187,14 +165,11 @@ Game::game_update() {
 		} case STATE::LEVEL: {
 			pre_state=state;
 			background = IC->get(background_img_path);
+			change_music(background_sound_path);
 
-			if(!bgm_playing) {
-				if(music != nullptr) SC->toggle_playing(music);
-				music = SC->play(background_sound_path, ALLEGRO_PLAYMODE_LOOP);
-				bgm_playing = true;
-			}
+			bool leftClicked = (DC->mouse_state[1] && !DC->prev_mouse_state[1]);
 
-			if(DC->mouse_state[1] && !DC->prev_mouse_state[1]) {
+			if(leftClicked) {
 				int mouse_x = DC->mouse.x;
                 int mouse_y = DC->mouse.y;
 
@@ -213,11 +188,7 @@ Game::game_update() {
 		}case STATE::CHARACTER:{
 			
 			background = IC->get(character_img_path);
-			if(!bgm_playing) {
-				if(music != nullptr) SC->toggle_playing(music);
-				music = SC->play(character_sound_path, ALLEGRO_PLAYMODE_LOOP);
-				bgm_playing = true;
-			}
+			change_music(character_sound_path);
 	
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_P] && !DC->prev_key_state[ALLEGRO_KEY_P]) {
