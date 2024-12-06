@@ -75,10 +75,12 @@ Game::Game() {
 	event_init &= al_install_audio();
 	GAME_ASSERT(event_init, "failed to initialize allegro events.");
 
+	al_set_new_display_flags(ALLEGRO_NOFRAME);
 	// initialize game body
 	GAME_ASSERT(
 		display = al_create_display(DC->window_width, DC->window_height),
 		"failed to create display.");
+	al_set_window_position(display, 0, 0);
 	GAME_ASSERT(
 		timer = al_create_timer(1.0 / DC->FPS),
 		"failed to create timer.");
@@ -130,6 +132,7 @@ Game::game_init() {
 
 void Game::change_state(Game::STATE new_state){
 	pre_state = state;
+	current_buttons.clear();
 	bgm_playing = false;
 	state = new_state;
 }
@@ -148,24 +151,33 @@ void Game::check_current_state(){
 			change_state(STATE::LEVEL);
 			break;
 		} case STATE::LEVEL: {
-			pre_state=state;
+			if(pre_state != state){
+				Button play_music(1300, 500, play_music_path, [&](){change_state(STATE::CHARACTER);});
+				Button gallery(1300, 700, gallery_path, [&](){change_state(STATE::SONG);});
+				Button character(1300, 900, character_path, [&](){change_state(STATE::GALLERY);});
+				current_buttons.push_back(play_music);
+				current_buttons.push_back(gallery);
+				current_buttons.push_back(character);
+				pre_state=state;
+			}
+
+
+
 			background = IC->get(background_img_path);
 			change_music(background_sound_path);
 
 			bool leftClicked = (DC->mouse_state[1] && !DC->prev_mouse_state[1]);
+			int mouse_x = DC->mouse.x;
+            int mouse_y = DC->mouse.y;
+
+			for(Button &button : current_buttons){
+            	button.update(mouse_x, mouse_y);
+            }
 
 			if(leftClicked) {
-				int mouse_x = DC->mouse.x;
-                int mouse_y = DC->mouse.y;
 
-                if (mouse_x >= 0 && mouse_x <= 899 && mouse_y >= 0 && mouse_y <= 671) {
-					change_state(STATE::CHARACTER);
-                }
-				else if (mouse_x >= 0 && mouse_x <= 899 && mouse_y >= 671 && mouse_y <= 1344) {
-					change_state(STATE::SONG);
-                }
-				else if (mouse_x >= 900 && mouse_x <= 1800 && mouse_y >= 671 && mouse_y <= 1344) {
-					change_state(STATE::GALLERY);
+                for(Button &button : current_buttons){
+                	button.clicked();
                 }
 			}
 			
@@ -202,7 +214,7 @@ void Game::check_current_state(){
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
 			{
-				state=STATE::LEVEL;
+				change_state(STATE::LEVEL);
 			}
 			break;
 		} case STATE::GALLERY:{
@@ -231,7 +243,7 @@ void Game::check_current_state(){
 			pre_state=state;
 			if(DC->key_state[ALLEGRO_KEY_0]&&!DC->prev_key_state[ALLEGRO_KEY_0])
 			{
-				state=STATE::LEVEL;
+				change_state(STATE::LEVEL);
 			}
 			break;
 		} case STATE::PAUSE: {
@@ -243,7 +255,7 @@ void Game::check_current_state(){
 			}
 			break;
 		} case STATE::END: {
-			
+
 		}
 	}
 }
@@ -279,13 +291,7 @@ Game::game_update() {
 	return true;
 }
 
-/**
- * @brief Draw the whole game and objects.
- */
-void
-Game::game_draw() {
-	// Flush the screen first.
-	al_clear_to_color(al_map_rgb(100, 100, 100));
+void Game::draw_background(){
 	if(state != STATE::END) {
 		// background
 		al_draw_bitmap(background, 0, 0, 0);
@@ -305,6 +311,9 @@ Game::game_draw() {
 			//DC->character->draw();
 		}
 	}
+}
+
+void Game::draw_states(){
 	switch(state) {
 		case STATE::START: {
 			break;
@@ -339,6 +348,32 @@ Game::game_draw() {
 		} case STATE::END: {
 		}
 	}
+}
+
+void Game::draw_buttons() {
+	for(Button &button : current_buttons){
+		button.draw();
+	}
+}
+
+/**
+ * @brief Draw the whole game and objects.
+ */
+void Game::game_draw() {
+	// Flush the screen first.
+	al_clear_to_color(al_map_rgb(100, 100, 100));
+	draw_background();
+	draw_states();
+	draw_buttons();
+
+	ALLEGRO_COLOR green = al_map_rgb(0, 255, 0);
+	al_draw_circle(
+	    DC->mouse.x, DC->mouse.y,    // Center coordinates (cx, cy)
+	    5,         // Radius
+	    green,       // Color
+	    5.0          // Line thickness
+	);
+	
 	al_flip_display();
 }
 

@@ -15,17 +15,21 @@
 #include <allegro5/allegro_acodec.h>
 #include "Utils.h"
 #include "Character.h"
+#include "objects/Button.h"
 #include <vector>
 #include <cstring>
 #include <iostream>
 
 // fixed settings image
 constexpr char game_icon_img_path[] = "./assets/image/game_icon.png";
-constexpr char background_img_path[] = "./assets/image/StartBackground.jpg";
+constexpr char background_img_path[] = "./assets/image/start_background_without_buttons.png";
 constexpr char character_img_path[] = "./assets/image/doki_character.jpg";
 constexpr char song_img_path[] = "./assets/image/song.png";
 constexpr char gallery_img_path[] = "./assets/image/gallery.png";
 constexpr char get_img_path[] = "./assets/image/get.png";
+constexpr char play_music_path[] = "./assets/ui/play_music.png";
+constexpr char gallery_path[] = "./assets/ui/gallery.png";
+constexpr char character_path[] = "./assets/ui/character.png";
 
 //sound
 constexpr char game_start_sound_path[] = "./assets/sound/growl.wav";
@@ -64,6 +68,7 @@ private:
 	SoundCenter *SC;
 	ImageCenter *IC;
 	FontCenter *FC;
+	std::vector<Button> current_buttons;
 private:
 	ALLEGRO_DISPLAY *display;
 	ALLEGRO_TIMER *timer;
@@ -76,6 +81,9 @@ public:
 	void game_init();
 	bool game_update();
 	void game_draw();
+	void draw_background();
+	void draw_states();
+	void draw_buttons();
 	void change_state(Game::STATE new_state);
 	void change_music(const char* song_path);
 	void check_current_state();
