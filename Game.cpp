@@ -13,7 +13,7 @@ bool ch_init;
  */
 void
 Game::execute() {
-	DC = DataCenter::get_instance();
+	// DC = DataCenter::get_instance();
 	// main game loop
 	bool run = true;
 	while(run) {
@@ -107,13 +107,11 @@ Game::game_init() {
 
 	// init sound setting
 	bgm_playing = false;
+	music = nullptr;
 	SC->init();
 
 	// init font setting
 	FC->init();
-
-	ui = new UI();
-	ui->init();
 
 	//DC->level->init();
 	 //DC->character->init();
@@ -144,23 +142,10 @@ void Game::change_music(const char* song_path){
 	}
 }
 
-/**
- * @brief The function processes all data update.
- * @details The behavior of the whole game body is determined by its state.
- * @return Whether the game should keep running (true) or reaches the termination criteria (false).
- * @see Game::STATE
- */
-bool
-Game::game_update() {
-	DataCenter *DC = DataCenter::get_instance();
-	OperationCenter *OC = OperationCenter::get_instance();
-	ImageCenter *IC = ImageCenter::get_instance();
-	SoundCenter *SC = SoundCenter::get_instance();
-	
+void Game::check_current_state(){
 	switch(state) {
 		case STATE::START: {
-			pre_state=state;
-			state = STATE::LEVEL;
+			change_state(STATE::LEVEL);
 			break;
 		} case STATE::LEVEL: {
 			pre_state=state;
@@ -257,21 +242,34 @@ Game::game_update() {
 				state = STATE::LEVEL;
 			}
 			break;
-		} case STATE::END: {
-			return false;
 		}
 	}
+}
+
+/**
+ * @brief The function processes all data update.
+ * @details The behavior of the whole game body is determined by its state.
+ * @return Whether the game should keep running (true) or reaches the termination criteria (false).
+ * @see Game::STATE
+ */
+bool
+Game::game_update() {
+	// debug_log("RUN!!!\n");
+	check_current_state();
+	
 	
 	// If the game is not paused, we should progress update.
 	if(state != STATE::PAUSE) {
 		//DC->player->update();
 		SC->update();
-		ui->update();
 		//DC->character->update();
 		if(state != STATE::START) {
 			//DC->level->update();
-			OC->update();
 		}
+	}
+
+	if(state == STATE::END){
+		return false;
 	}
 	// game_update is finished. The states of current frame will be previous states of the next frame.
 	memcpy(DC->prev_key_state, DC->key_state, sizeof(DC->key_state));
@@ -284,10 +282,6 @@ Game::game_update() {
  */
 void
 Game::game_draw() {
-	DataCenter *DC = DataCenter::get_instance();
-	OperationCenter *OC = OperationCenter::get_instance();
-	FontCenter *FC = FontCenter::get_instance();
-
 	// Flush the screen first.
 	al_clear_to_color(al_map_rgb(100, 100, 100));
 	if(state != STATE::END) {
@@ -307,8 +301,6 @@ Game::game_draw() {
 		if(state != STATE::START) {
 			//DC->level->draw();
 			//DC->character->draw();
-			ui->draw();
-			OC->draw();
 		}
 	}
 	switch(state) {

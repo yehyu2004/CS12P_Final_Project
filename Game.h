@@ -13,10 +13,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_acodec.h>
-#include "UI.h"
 #include "Utils.h"
-#include "Player.h"
-#include "Level.h"
 #include "Character.h"
 #include <vector>
 #include <cstring>
@@ -71,7 +68,6 @@ private:
 	ALLEGRO_DISPLAY *display;
 	ALLEGRO_TIMER *timer;
 	ALLEGRO_EVENT_QUEUE *event_queue;
-	UI *ui;
 public:
 	void execute();
 public:
@@ -82,6 +78,7 @@ public:
 	void game_draw();
 	void change_state(Game::STATE new_state);
 	void change_music(const char* song_path);
+	void check_current_state();
 };
 
 #endif

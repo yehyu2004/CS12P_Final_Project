@@ -1,10 +1,5 @@
 #include "DataCenter.h"
 #include <cstring>
-#include "../Level.h"
-#include "../Player.h"
-#include "../monsters/Monster.h"
-#include "../towers/Tower.h"
-#include "../towers/Bullet.h"
 #include "../Character.h"
 
 // fixed settings
@@ -25,21 +20,9 @@ DataCenter::DataCenter() {
 	mouse = Point(0, 0);
 	memset(mouse_state, false, sizeof(mouse_state));
 	memset(prev_mouse_state, false, sizeof(prev_mouse_state));
-	player = new Player();
-	level = new Level();
 	character = new Character();
 }
 
 DataCenter::~DataCenter() {
-	delete player;
-	delete level;
-	for(Monster *&m : monsters) {
-		delete m;
-	}
-	for(Tower *&t : towers) {
-		delete t;
-	}
-	for(Bullet *&b : towerBullets) {
-		delete b;
-	}
+	// delete player;
 }
