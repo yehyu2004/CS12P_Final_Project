@@ -5,7 +5,6 @@
 #include "core/ResourceManager.h"
 #include "core/ConfigManager.h"
 #include "core/InputManager.h"
-#include "Character.h"
 #include "objects/Button.h"
 #include "scenes/Scene.h"
 #include <allegro5/allegro.h>

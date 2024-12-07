@@ -4,6 +4,7 @@
 #include "../Scene.h"
 #include <functional>
 #include <vector>
+#include <string>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -22,7 +23,6 @@ public:
     bool update() override;
     void draw() override;
     void handle_input() override;
-
 private:
     ResourceManager* RM;
     ConfigManager* CM;
@@ -32,6 +32,7 @@ private:
     ALLEGRO_BITMAP* background;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
+    void load_configs(const std::string &filename);
 };
 
 #endif

@@ -10,6 +10,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_acodec.h>
 #include "../../objects/Button.h"
+#include "../../objects/Character.h"
 
 class ResourceManager;
 class ConfigManager;
@@ -32,6 +33,7 @@ private:
     ALLEGRO_BITMAP* background;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
+    Character *character;
 };
 
 #endif

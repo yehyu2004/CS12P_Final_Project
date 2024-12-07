@@ -6,10 +6,11 @@
 
 #include <iostream>
 SongScene::SongScene(ResourceManager* rm, ConfigManager* cm, InputManager* im, std::function<void(const std::string&)> scene_changer)
-: RM(rm), CM(cm), IM(im), change_scene(scene_changer), music(nullptr), background(nullptr) {}
+: RM(rm), CM(cm), IM(im), change_scene(scene_changer), music(nullptr), background(nullptr), character(new Character()){}
 
 void SongScene::init() {
     background = RM->get_image("song_background");
+    character->init();
 
     // Play menu BGM
     music = RM->play_sound("menu_bgm", ALLEGRO_PLAYMODE_LOOP);
@@ -17,6 +18,7 @@ void SongScene::init() {
 
 bool SongScene::update() {
     RM->update_sounds();
+    if(character->has_init) character->update();
     return true; // return false if you want the game to end
 }
 
@@ -26,6 +28,7 @@ void SongScene::draw() {
     for (auto &btn : buttons) {
         btn.draw();
     }
+    if(character->has_init) character->draw();
 }
 
 void SongScene::handle_input() {

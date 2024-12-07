@@ -12,6 +12,7 @@ namespace CharacterSetting {
 }
 
 void Character::init() {
+    has_init = true;
     RM = ResourceManager::get_instance();
     CM = ConfigManager::get_instance();
     IM = InputManager::get_instance();

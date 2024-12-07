@@ -1,12 +1,8 @@
-// Game.cpp
 #include "Game.h"
 #include "scenes/MenuScene/MenuScene.h"
-// #include "scenes/LevelScene/LevelScene.h"
 #include "scenes/CharacterScene/CharacterScene.h"
 #include "scenes/SongScene/SongScene.h"
 #include "scenes/GalleryScene/GalleryScene.h"
-// #include "scenes/PauseScene.h"
-// #include "scenes/EndScene.h"
 #include "Utils.h"
 
 Game::Game() {

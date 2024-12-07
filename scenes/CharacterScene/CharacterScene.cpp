@@ -3,9 +3,12 @@
 #include "../../core/ConfigManager.h"
 #include "../../core/InputManager.h"
 #include "../../Utils.h"
+#include "../../library/nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 CharacterScene::CharacterScene(ResourceManager* rm, ConfigManager* cm, InputManager* im, std::function<void(const std::string&)> scene_changer)
-: RM(rm), CM(cm), IM(im), change_scene(scene_changer), music(nullptr), background(nullptr) {init();}
+: RM(rm), CM(cm), IM(im), change_scene(scene_changer), music(nullptr), background(nullptr) {}
 
 void CharacterScene::init() {
     background = RM->get_image("character_background");

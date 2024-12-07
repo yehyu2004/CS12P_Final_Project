@@ -4,10 +4,10 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "core/ConfigManager.h"
-#include "core/ResourceManager.h"
-#include "core/InputManager.h"
-#include "algif5/algif.h"
+#include "../core/ConfigManager.h"
+#include "../core/ResourceManager.h"
+#include "../core/InputManager.h"
+#include "../algif5/algif.h"
 
 enum class CharacterState {
     LEFT,
@@ -48,11 +48,12 @@ private:
         return RM->get_gif(gifKeys.at(state));
     }
 public:
-    Character() : state(CharacterState::LEFT), speed(5.0f), x(500.0f), y(0.0f), level(1) {}
+    bool has_init;
 
     void init();
     void update();
     void draw();
+    Character() : state(CharacterState::LEFT), speed(5.0f), x(500.0f), y(0.0f), level(1), has_init(false) {}
 
     // Optional: For collision checks with other objects
     void get_bounding_box(float &out_x, float &out_y, float &out_w, float &out_h) const;
