@@ -4,17 +4,29 @@
 #include "../../core/InputManager.h"
 #include "../../Utils.h"
 #include "../../library/nlohmann/json.hpp"
+#include <fstream>
 
 using json = nlohmann::json;
 
 CharacterScene::CharacterScene(ResourceManager* rm, ConfigManager* cm, InputManager* im, std::function<void(const std::string&)> scene_changer)
 : RM(rm), CM(cm), IM(im), change_scene(scene_changer), music(nullptr), background(nullptr) {}
 
-void CharacterScene::init() {
-    background = RM->get_image("character_background");
+void CharacterScene::read_configs(){
+    std::ifstream file("scenes/CharacterScene/configs.json");
 
-    // Play menu BGM
-    music = RM->play_sound("menu_bgm", ALLEGRO_PLAYMODE_LOOP);
+    json j;
+    file >> j;
+
+    // Now read the keys
+    background_key = j.value("background", "character_background");
+    bgm_key = j.value("bgm", "menu_bgm");
+}
+
+void CharacterScene::init() {
+    read_configs();
+
+    background = RM->get_image(background_key);
+    music = RM->play_sound(bgm_key, ALLEGRO_PLAYMODE_LOOP);
 }
 
 bool CharacterScene::update() {

@@ -1,4 +1,3 @@
-// MenuScene.h
 #ifndef MENUSCENE_H_INCLUDED
 #define MENUSCENE_H_INCLUDED
 

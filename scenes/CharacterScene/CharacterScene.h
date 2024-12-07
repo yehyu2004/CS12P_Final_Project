@@ -32,7 +32,8 @@ private:
     ALLEGRO_BITMAP* background;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
-    void load_configs(const std::string &filename);
+    std::string background_key, bgm_key;
+    void read_configs();
 };
 
 #endif

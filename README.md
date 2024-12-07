@@ -30,7 +30,7 @@ src/
 3. Open terminal at the path `src/CS12P_Final_Project`, and run 
 
 ```bash
-make
+make release
 ```
 
 4. Double click on `src/CS12P_Final_Project/game.exe`, and have fun!

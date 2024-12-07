@@ -3,15 +3,30 @@
 #include "../../core/ConfigManager.h"
 #include "../../core/InputManager.h"
 #include "../../Utils.h"
+#include "../../library/nlohmann/json.hpp"
+#include <fstream>
+
+using json = nlohmann::json;
 
 GalleryScene::GalleryScene(ResourceManager* rm, ConfigManager* cm, InputManager* im, std::function<void(const std::string&)> scene_changer)
 : RM(rm), CM(cm), IM(im), change_scene(scene_changer), music(nullptr), background(nullptr) {}
 
-void GalleryScene::init() {
-    background = RM->get_image("gallery_background");
+void GalleryScene::read_configs(){
+    std::ifstream file("scenes/GalleryScene/configs.json");
 
-    // Play menu BGM
-    music = RM->play_sound("menu_bgm", ALLEGRO_PLAYMODE_LOOP);
+    json j;
+    file >> j;
+
+    // Now read the keys
+    background_key = j.value("background", "character_background");
+    bgm_key = j.value("bgm", "menu_bgm");
+}
+
+void GalleryScene::init() {
+    read_configs();
+    
+    background = RM->get_image(background_key);
+    music = RM->play_sound(bgm_key, ALLEGRO_PLAYMODE_LOOP);
 }
 
 bool GalleryScene::update() {

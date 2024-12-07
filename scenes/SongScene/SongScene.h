@@ -34,6 +34,8 @@ private:
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
     Character *character;
+    std::string background_key, bgm_key;
+    void read_configs();
 };
 
 #endif
