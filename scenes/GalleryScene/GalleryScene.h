@@ -1,4 +1,4 @@
-#ifndef GALLERYCENE_H_INCLUDED
+#ifndef GALLERYSCENE_H_INCLUDED
 #define GALLERYSCENE_H_INCLUDED
 
 #include "../Scene.h"

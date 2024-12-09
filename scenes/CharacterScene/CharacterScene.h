@@ -10,6 +10,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_acodec.h>
+#include "../../algif5/algif.h"
 #include "../../objects/Button.h"
 
 class ResourceManager;
@@ -32,7 +33,9 @@ private:
     ALLEGRO_BITMAP* background;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
-    std::string background_key, bgm_key;
+    std::string background_key, bgm_key,au_key,ma_key,na_key;
+    bool is_selected;
+    ALGIF_ANIMATION *gif;
     void read_configs();
 };
 

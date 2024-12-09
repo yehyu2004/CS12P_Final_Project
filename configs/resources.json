@@ -9,14 +9,38 @@
         "character_background": "./assets/background/character_background.jpg",
         "song_background": "./assets/background/select_background.png",
         "gallery_background": "./assets/background/gallery_background.jpg",
+        "Nyancat4k_background":"./assets/background/Nyancat4k.png",
+        "Nyancat4k_pause":"./assets/image/pause.png",
+        "Nyancat6k_background":"./assets/background/Nyancat6k.png",
+        "Nyancat6k_pause":"./assets/image/pause.png",
+        "Success_background":"./assets/background/success.png",
+        "Lose_background":"./assets/background/lose.png",
+        "Musicstart_background":"./assets/background/musicstart.png",
+        
         "play_music_btn": "./assets/ui/play_music.png",
         "gallery_btn": "./assets/ui/gallery.png",
-        "character_btn": "./assets/ui/character.png"
+        "character_btn": "./assets/ui/character.png",
+
+        "//comment":"1<->7,2<->8,3<->9, 因為貓貓需要在第一排但我懶得改檔名",
+        "song1_btn": "./assets/image/song7.png", 
+        "song2_btn": "./assets/image/song8.png",
+        "song3_btn": "./assets/image/song9.png",
+        "song4_btn": "./assets/image/song4.png",
+        "song5_btn": "./assets/image/song5.png",
+        "song6_btn": "./assets/image/song6.png",
+        "song7_btn": "./assets/image/song1.png",
+        "song8_btn": "./assets/image/song2.png",
+        "song9_btn": "./assets/image/song3.png"
     },
     "gifs": {
         "character_left": "./assets/gif/Character/character_left.gif",
         "character_right": "./assets/gif/Character/character_right.gif",
-        "character_jump": "./assets/gif/Character/character_jump.gif"
+        "character_jump": "./assets/gif/Character/character_jump.gif",
+        "musicstart": "./assets/gif/musicstart.gif",
+        "aurora_selected": "./assets/gif/au_selected.gif",
+        "maymon_selected": "./assets/gif/ma_selected.gif",
+        "nora_selected": "./assets/gif/na_selected.gif",
+        "dance": "./assets/gif/dance.gif"
     },
     "sounds": {
         "menu_bgm": "./assets/sound/menu.mp3",

@@ -1,4 +1,7 @@
 {
 	"background": "character_background",
-	"bgm": "character_bgm"
+	"bgm": "character_bgm",
+	"au_gif": "aurora_selected",
+	"ma_gif": "maymon_selected",
+	"no_gif": "nora_selected"
 }

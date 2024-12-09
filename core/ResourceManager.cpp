@@ -2,6 +2,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_font.h>
 #include <fstream>
 #include "../library/nlohmann/json.hpp" // Include your chosen JSON library
 

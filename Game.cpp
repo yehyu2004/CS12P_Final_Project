@@ -2,7 +2,13 @@
 #include "scenes/MenuScene/MenuScene.h"
 #include "scenes/CharacterScene/CharacterScene.h"
 #include "scenes/SongScene/SongScene.h"
+#include "scenes/NyancatScene4k/NyancatScene4k.h"
+#include "scenes/NyancatScene6k/NyancatScene6k.h"
+#include "scenes/SuccessScene/SuccessScene.h"
+#include "scenes/LoseScene/LoseScene.h"
 #include "scenes/GalleryScene/GalleryScene.h"
+#include "scenes/MusicstartScene/MusicstartScene.h"
+#include "scenes/Musicstart2Scene/Musicstart2Scene.h"
 #include "Utils.h"
 
 Game::Game() {
@@ -159,6 +165,18 @@ void Game::change_scene(const std::string& scene_name) {
         current_scene = make_scene<SongScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
     } else if (scene_name == "GALLERY") {
         current_scene = make_scene<GalleryScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
+    } else if (scene_name == "MUSICSTART") {
+        current_scene = make_scene<MusicstartScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
+    }else if (scene_name == "MUSICSTART2") {
+        current_scene = make_scene<Musicstart2Scene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
+    }else if (scene_name == "NYANCAT4K") {
+        current_scene = make_scene<Nyancat4kScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
+    }else if (scene_name == "NYANCAT6K") {
+        current_scene = make_scene<Nyancat6kScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
+    }else if (scene_name == "SUCCESS") {
+        current_scene = make_scene<SuccessScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
+    }else if (scene_name == "LOSE") {
+        current_scene = make_scene<LoseScene>(RM, CM, IM, [this](const std::string &s){change_scene(s);});
     }
 
     if (current_scene) {
