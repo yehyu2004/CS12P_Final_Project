@@ -23,6 +23,7 @@ public:
     bool update() override;
     void draw() override;
     void handle_input() override;
+    void set_timer(double wait_duration);
 
 private:
     ResourceManager* RM;
@@ -31,10 +32,11 @@ private:
     std::function<void(const std::string&)> change_scene;
 
     ALLEGRO_BITMAP* background;
-    std::vector<Button> buttons;
+    std::vector<Song> songs;
     ALLEGRO_SAMPLE_INSTANCE* music;
     Character *character;
     std::string background_key, bgm_key;
+    double timer_time, wait_duration;
     void read_configs();
 };
 

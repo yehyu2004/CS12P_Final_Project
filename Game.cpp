@@ -24,6 +24,9 @@ Game::Game() {
     init_addons();
     init_events();
     allegro_setup();
+
+    debug_log("Game initialized.\n");
+    game_init();
 }
 
 Game::~Game() {
@@ -71,9 +74,6 @@ void Game::allegro_setup() {
         event_queue = al_create_event_queue(),
         "failed to create event queue."
     );
-
-    debug_log("Game initialized.\n");
-    game_init();
 }
 
 void Game::game_init() {

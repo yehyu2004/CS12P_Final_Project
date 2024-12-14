@@ -8,6 +8,7 @@
 #include "../core/ResourceManager.h"
 #include "../core/InputManager.h"
 #include "../algif5/algif.h"
+#include "Song.h"
 
 enum class CharacterState {
     LEFT,
@@ -53,6 +54,9 @@ public:
     void init();
     void update();
     void draw();
+    float get_x(){ return x; }
+    float get_y(){ return y; }
+    bool check_jump(std::vector<Song> &songs);
     Character() : state(CharacterState::LEFT), speed(5.0f), x(500.0f), y(0.0f), level(1), has_init(false) {}
 
     // Optional: For collision checks with other objects

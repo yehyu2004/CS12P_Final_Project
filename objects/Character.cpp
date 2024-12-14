@@ -52,9 +52,22 @@ void Character::update() {
         handle_move_down();
     }
 
-    if (IM->was_key_pressed(ALLEGRO_KEY_SPACE)) {
-        handle_jump();
+    // if (IM->was_key_pressed(ALLEGRO_KEY_SPACE)) {
+    //     handle_jump();
+    // }
+}
+
+bool Character::check_jump(std::vector<Song> &songs){
+    bool has_song_touched = false;
+    for(auto &song : songs){
+        if(song.is_character_touched()){
+            has_song_touched = true;
+        }
     }
+    if(has_song_touched)
+        handle_jump();
+
+    return has_song_touched;
 }
 
 void Character::draw() {
