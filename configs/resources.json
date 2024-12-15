@@ -61,6 +61,8 @@
     "sounds": {
         "menu_bgm": "./assets/sound/menu.mp3",
         "character_bgm": "./assets/sound/characterbgm.mp3",
+        "songscene_bgm": "./assets/sound/songscenebgm.mp3",
+        "galleryscene_bgm": "./assets/sound/gallerybgm.mp3",
         "nyan_cat_17s": "./assets/songs/nyan_cat_17s.mp3",
         "nyan_cat_32s": "./assets/songs/nyan_cat_32s.mp3",
         "nyan_cat_full": "./assets/songs/nyan_cat_full.mp3"

@@ -19,7 +19,7 @@ void SuccessScene::read_configs(){
 
     // Now read the keys
     background_key = j.value("background", "Success_background");
-    bgm_key = j.value("bgm", "menu_bgm");
+    bgm_key = j.value("bgm", "nyan_cat_full");
 }
 
 void SuccessScene::init() {

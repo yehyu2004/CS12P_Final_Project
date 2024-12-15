@@ -19,7 +19,7 @@ void GalleryScene::read_configs(){
 
     // Now read the keys
     background_key = j.value("background", "character_background");
-    bgm_key = j.value("bgm", "menu_bgm");
+    bgm_key = j.value("bgm", "galleryscene_bgm");
 }
 
 void GalleryScene::init() {

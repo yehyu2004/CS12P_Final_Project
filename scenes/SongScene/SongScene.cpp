@@ -19,8 +19,8 @@ void SongScene::read_configs(){
     file >> j;
 
     // Now read the keys
-    background_key = j.value("background", "character_background");
-    bgm_key = j.value("bgm", "menu_bgm");
+    background_key = j.value("background", "song_background");
+    bgm_key = j.value("bgm", "songscene_bgm");
 }
 
 void SongScene::init() {

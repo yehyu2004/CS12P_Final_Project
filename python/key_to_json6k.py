@@ -7,6 +7,9 @@ s = 4000      # Starting offset in milliseconds (set to 0 if not needed)
 # Calculate the duration of one beat in milliseconds
 t = 60000 / BPM
 
+# Enter the name of song
+songName = "Nyan_Cat_" 
+
 # Define the key timing data as a list of lists (rows of the table)
 key_timing_data = [
     ["0*t+s, 8*t+s", "16*t+s", "20*t+s", "24*t+s", "28*t+s", "8*t+s, 16*t+s"],
@@ -83,7 +86,7 @@ chart_json = {
 }
 
 # Define the output JSON file path
-output_file_path = "python/chart6k.json"
+output_file_path = f"python/{songName}chart6k.json"
 
 # Write the JSON data to the file with pretty formatting
 try:
