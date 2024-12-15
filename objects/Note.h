@@ -44,9 +44,9 @@ const std::vector<std::array<int,3>> key_note_color_6k = {
 };
 
 const int NOTE_WIDTH = 200, NOTE_HEIGHT = 100;
-const double FALL_SPEED = 50, FALL_LENGTH = 925;
+const double FALL_SPEED = 30, FALL_LENGTH = 925;
 const double FPS = 60; //temporaily
-const double PERFECT_FRAME = 20, GOOD_FRAME = 40, MISS_FRAME = 60;
+const double PERFECT_FRAME = 40, GOOD_FRAME = 80, MISS_FRAME = 120;
 
 enum SCORE_TYPE{
 	PERFECT, GOOD, MISS, NONE
@@ -66,6 +66,7 @@ public:
 	SCORE_TYPE check_score(int key);
 	double get_time() { return time; }
 	double get_y() { return y; }
+	double get_col() { return col; }
 	Note(double time_, int col_, std::string type_, std::string game_type_);
 };
 #endif

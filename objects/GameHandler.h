@@ -10,19 +10,26 @@
 #include <array>
 #include <deque>
 #include <queue>
+#include <utility>
 #include "../core/ChartLoader.h"
+#include "../core/InputManager.h"
+#include "../core/ResourceManager.h"
 #include "Note.h"
 
 const int PERFECT_SCORE = 500, GOOD_SCORE = 300, MISS_SCORE = 0;
 // const double FALL_SPEED = 50, FALL_LENGTH = 925;
+const int SCORE_TIME = 1000;
 
 class GameHandler{
 private:	
 	InputManager *IM;
+	ResourceManager *RM;
 	ChartLoader *CL;
 	std::queue<Note> notes;
 	std::deque<Note> current_notes;
+	std::deque<std::pair<double, std::pair<SCORE_TYPE, int>>> current_scores;
 	std::string game_type;
+	ALLEGRO_FONT *font;
 	int perfect_count, good_count, miss_count, start_time;
 	bool is_init;
 public:
