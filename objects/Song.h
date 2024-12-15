@@ -17,8 +17,8 @@ private:
 public:
 	void init();
 	void draw();
-	void update(int mouse_x, int mouse_y);
-	void character_jumped();
+	void update(int character_x, int character_y);
+	bool character_jumped();
 	bool is_character_touched(){ return character_touched; }
 	Song(int x_, int y_, ALLEGRO_BITMAP *image_){
 		x = x_;

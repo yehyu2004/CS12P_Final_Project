@@ -87,15 +87,18 @@ void SongScene::handle_input() {
     //     btn.update(mouse_x, mouse_y);
     // }
 
-    if (timer_time == 100000000) {
-        if(IM->was_key_pressed(ALLEGRO_KEY_SPACE)){
-            if(character->check_jump(songs)){
-                set_timer(2); // Wait for character to jump, should also play some sound effect at this time   
+    if(character->has_init){
+        if (timer_time == 100000000) {
+            if(IM->was_key_pressed(ALLEGRO_KEY_SPACE)){
+                if(character->check_jump(songs)){
+                    set_timer(2); // Wait for character to jump, should also play some sound effect at this time   
+                }
             }
-        }
-    }else if ((al_current_time() - timer_time) >= wait_duration){
-        for (auto &song : songs) {
-            song.character_jumped();
+        }else if ((al_current_time() - timer_time) >= wait_duration){
+            for (auto &song : songs) {
+                if(song.character_jumped())
+                    return;
+            }
         }
     }
 

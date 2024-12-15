@@ -39,6 +39,7 @@ bool MusicstartScene::update() {
 
 void MusicstartScene::draw() {
     if(!background) return;
+    if(!gif) return;
     al_draw_bitmap(background, 0, 0, 0);
     algif_draw_gif(gif, 0, 0, 0);    
     // for (auto &btn : buttons) {

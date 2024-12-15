@@ -13,13 +13,15 @@ void Song::update(int character_x, int character_y) {
 	}
 }
 
-void Song::character_jumped() {
+bool Song::character_jumped() {
 	if(character_touched){
 		if(!ran_action){
 			ran_action = true;
 			action();
+			return true;
 		}
 	}
+	return false;
 }
 
 
