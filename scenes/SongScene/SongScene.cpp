@@ -1,4 +1,4 @@
-timer_time#include "SongScene.h"
+#include "SongScene.h"
 #include "../../core/ResourceManager.h"
 #include "../../core/ConfigManager.h"
 #include "../../core/InputManager.h"
