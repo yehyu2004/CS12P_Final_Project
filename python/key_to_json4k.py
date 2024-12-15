@@ -5,12 +5,12 @@ BPM = 142  # You can change this value based on your song's BPM
 s = 4000    # Starting offset in milliseconds (set to 0 if not needed)
 
 # Calculate the duration of one beat in milliseconds
-t = 60000 / BPM
+t = 60000 / BPM / 2 / 2
 
 # Define the key timing data as a list of lists (rows of the table)
 # Replace "NULL" with None for easier handling in Python
 key_timing_data = [
-    ["0*t+s", "4*t+s", "6*t+s", "8*t+s"],
+    ["0*t+s", "4*t+s", "8*t+s", "12*t+s"],
     ["28*t+s", "24*t+s", "20*t+s", "16*t+s"],
     ["32*t+s", "40*t+s", "36*t+s", "44*t+s"],
     ["56*t+s", "48*t+s", "60*t+s", "52*t+s"],

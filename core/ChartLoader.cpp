@@ -20,16 +20,17 @@ std::queue<Note> ChartLoader::load_chart(const std::string chart_path, std::stri
 	    double time = obj["time"]; // assume it's sorted
 	    int column = obj["column"];
 	    std::string type = obj["type"];
+	    double duration = 0;
 
 	    // std::cout << "NOTE " << time << " " << column << " " << type << "\n";
 	    
 	    // If the type is 'hold', access 'duration'
 	    if (type == "hold") {
-	        double duration = obj["duration"];
-	        std::cout << "Duration: " << duration << " ms" << std::endl;
+	        duration = obj["duration"];
+	        // std::cout << "Duration: " << duration << " ms" << std::endl;
 	    }
 
-	    notes.push(Note(time, column, type, game_type));
+	    notes.push(Note(time, column, type, game_type, duration));
 	}
     return notes;
 }

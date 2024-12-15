@@ -33,7 +33,7 @@ void SongScene::init() {
 
     //song button
     Song song1_btn(250, 50, RM->get_image("song1_btn"), [&](){ if(music) RM->toggle_sound(music); change_scene("MUSICSTART");});
-    Song song2_btn(775, 50, RM->get_image("song2_btn"));
+    Song song2_btn(775, 50, RM->get_image("song2_btn"), [&](){ if(music) RM->toggle_sound(music); change_scene("MUSICSTART2");});
     Song song3_btn(1350, 50, RM->get_image("song3_btn"));
     Song song4_btn(250, 385, RM->get_image("song4_btn"));
     Song song5_btn(775, 385, RM->get_image("song5_btn"));

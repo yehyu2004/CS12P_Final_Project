@@ -11,6 +11,7 @@
 #include <allegro5/allegro_acodec.h>
 #include "../../algif5/algif.h"
 #include "../../objects/Button.h"
+#include "../../objects/GameHandler.h"
 
 class ResourceManager;
 class ConfigManager;
@@ -25,19 +26,25 @@ public:
     void handle_input() override;
 
 private:
+    void read_configs();
+
     ResourceManager* RM;
     ConfigManager* CM;
     InputManager* IM;
+    GameHandler* game; // Added to handle 6k game logic
     std::function<void(const std::string&)> change_scene;
 
-    ALLEGRO_BITMAP* background,*pause_Img,*key1,*key2,*key3,*key4,*key5,*key6;
-    std::vector<Button> buttons;
+    ALLEGRO_BITMAP* background;
+    ALLEGRO_BITMAP* pause_Img;
+    ALGIF_ANIMATION* gif;
+    ALLEGRO_FONT* font;
+    ALLEGRO_FONT* large_font;
     ALLEGRO_SAMPLE_INSTANCE* music;
-    std::string background_key, bgm_key,pause_key,dance_key,text_key,key1_key,key2_key,key3_key,key4_key,key5_key,key6_key;
+
+    std::vector<Button> buttons;
     bool is_pause;
-    ALGIF_ANIMATION *gif;
-    ALLEGRO_FONT *font,*large_font;
-    void read_configs();
+
+    std::string background_key, bgm_key, pause_key, dance_key, text_key;
 };
 
 #endif

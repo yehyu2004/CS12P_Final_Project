@@ -18,12 +18,18 @@ class InputManager;
 class SuccessScene : public Scene {
 public:
     SuccessScene(ResourceManager* rm, ConfigManager* cm, InputManager* im, std::function<void(const std::string&)> scene_changer);
+
     void init() override;
     bool update() override;
     void draw() override;
     void handle_input() override;
 
+    // Method to set the game results from outside
+    static void setResults(int perfect, int good, int miss, int score);
+
 private:
+    void read_configs();
+
     ResourceManager* RM;
     ConfigManager* CM;
     InputManager* IM;
@@ -32,9 +38,15 @@ private:
     ALLEGRO_BITMAP* background;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
+    ALLEGRO_FONT* font;
+
     std::string background_key, bgm_key;
-    // bool is_pause;
-    void read_configs();
+
+    // Static variables to hold results
+    static int perfect_count;
+    static int good_count;
+    static int miss_count;
+    static int score;
 };
 
 #endif
