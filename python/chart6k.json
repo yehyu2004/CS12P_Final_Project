@@ -1,0 +1,226 @@
+{
+    "note_objects": [
+        {
+            "time": 4000.0,
+            "column": 0,
+            "type": "hold",
+            "duration": 3380.281690140845
+        },
+        {
+            "time": 7380.281690140845,
+            "column": 5,
+            "type": "hold",
+            "duration": 3380.281690140845
+        },
+        {
+            "time": 10760.56338028169,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 12450.704225352112,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 14140.845070422536,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 15830.985915492958,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 17521.12676056338,
+            "column": 0,
+            "type": "hold",
+            "duration": 3380.281690140844
+        },
+        {
+            "time": 17521.12676056338,
+            "column": 5,
+            "type": "hold",
+            "duration": 3380.281690140844
+        },
+        {
+            "time": 20901.408450704224,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 20901.408450704224,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 22591.549295774646,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 22591.549295774646,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 24281.690140845072,
+            "column": 0,
+            "type": "hold",
+            "duration": 3380.281690140844
+        },
+        {
+            "time": 25971.830985915494,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 26394.3661971831,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 26816.901408450703,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 27239.436619718308,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 27661.971830985916,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 28507.042253521126,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 30197.183098591548,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 31042.25352112676,
+            "column": 0,
+            "type": "hold",
+            "duration": 3380.281690140844
+        },
+        {
+            "time": 34422.535211267605,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 34845.07042253521,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 35267.605633802814,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 35690.14084507042,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 36112.67605633802,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 36535.211267605635,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 36957.74647887324,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 37380.281690140844,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 37802.81690140845,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 38647.887323943665,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 44563.380281690144,
+            "column": 5,
+            "type": "hold",
+            "duration": 3380.281690140844
+        },
+        {
+            "time": 47943.66197183099,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 48366.19718309859,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 48788.7323943662,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 49211.2676056338,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 49633.80281690141,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 50056.33802816901,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 50478.873239436616,
+            "column": 1,
+            "type": "tap"
+        },
+        {
+            "time": 50901.40845070423,
+            "column": 2,
+            "type": "tap"
+        },
+        {
+            "time": 51323.94366197183,
+            "column": 3,
+            "type": "tap"
+        },
+        {
+            "time": 52169.01408450704,
+            "column": 4,
+            "type": "tap"
+        },
+        {
+            "time": 56394.366197183095,
+            "column": 1,
+            "type": "tap"
+        }
+    ]
+}

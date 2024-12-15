@@ -11,6 +11,7 @@
 #include <allegro5/allegro_acodec.h>
 #include "../../algif5/algif.h"
 #include "../../objects/Button.h"
+#include "../../objects/GameHandler.h"
 
 class ResourceManager;
 class ConfigManager;
@@ -28,6 +29,7 @@ private:
     ResourceManager* RM;
     ConfigManager* CM;
     InputManager* IM;
+    GameHandler* game;
     std::function<void(const std::string&)> change_scene;
 
     ALLEGRO_BITMAP* background,*pause_Img,*key1,*key2,*key3,*key4;

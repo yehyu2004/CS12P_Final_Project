@@ -5,6 +5,7 @@
 #include "../../Utils.h"
 #include "../../library/nlohmann/json.hpp"
 #include <fstream>
+#include <string>
 
 using json = nlohmann::json;
 
@@ -31,6 +32,8 @@ void Nyancat4kScene::read_configs(){
 
 void Nyancat4kScene::init() {
     read_configs();
+
+    game = new GameHandler("songs/nyan_cat_4k/chart.json","songs/nyan_cat_4k/config.json", "4k");
     
     background = RM->get_image(background_key);
     pause_Img = RM->get_image(pause_key);
@@ -48,16 +51,19 @@ void Nyancat4kScene::init() {
 bool Nyancat4kScene::update() {
     //if(is_pause) return;
     RM->update_sounds();
+    if(game) game->update(), game->handle_input();
     return true; // return false if you want the game to end
 }
 
 void Nyancat4kScene::draw() {
     if(!background) return;
     al_draw_bitmap(background, 0, 0, 0);   
-    al_draw_bitmap(key1, 0, -200, 0);
-    al_draw_bitmap(key2, 0, -200, 0);   
-    al_draw_bitmap(key3, 0, -200, 0);
-    al_draw_bitmap(key4, 0, -200, 0);
+    // al_draw_bitmap(key1, 0, -200, 0);
+    // al_draw_bitmap(key2, 0, -200, 0);   
+    // al_draw_bitmap(key3, 0, -200, 0);
+    // al_draw_bitmap(key4, 0, -200, 0);
+
+    if(game) game->draw();
     
      
     // for (auto &btn : buttons) {
@@ -68,10 +74,10 @@ void Nyancat4kScene::draw() {
         al_draw_bitmap(pause_Img, 0, 0, 0);       
     }
     algif_draw_gif(gif, 0, 0, 0);
-    al_draw_text(large_font,al_map_rgb(78,41,19),1800,202,ALLEGRO_ALIGN_RIGHT,"1000"); //score, change "1000" to variable 
-    al_draw_text(font,al_map_rgb(49,62,79),1750,337,ALLEGRO_ALIGN_RIGHT,"0"); //perfect count
-    al_draw_text(font,al_map_rgb(84,130,50),1750,451,ALLEGRO_ALIGN_RIGHT,"0"); //good count
-    al_draw_text(font,al_map_rgb(193,0,0),1750,565,ALLEGRO_ALIGN_RIGHT,"0"); //miss count
+    al_draw_text(large_font,al_map_rgb(78,41,19),1800,202,ALLEGRO_ALIGN_RIGHT,std::to_string(game->get_score()).c_str()); //score, change "1000" to variable 
+    al_draw_text(font,al_map_rgb(49,62,79),1750,337,ALLEGRO_ALIGN_RIGHT,std::to_string(game->get_perfect()).c_str()); //perfect count
+    al_draw_text(font,al_map_rgb(84,130,50),1750,451,ALLEGRO_ALIGN_RIGHT,std::to_string(game->get_good()).c_str()); //good count
+    al_draw_text(font,al_map_rgb(193,0,0),1750,565,ALLEGRO_ALIGN_RIGHT,std::to_string(game->get_miss()).c_str()); //miss count
 
 }
 
