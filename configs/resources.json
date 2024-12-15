@@ -30,7 +30,23 @@
         "song6_btn": "./assets/image/song6.png",
         "song7_btn": "./assets/image/song1.png",
         "song8_btn": "./assets/image/song2.png",
-        "song9_btn": "./assets/image/song3.png"
+        "song9_btn": "./assets/image/song3.png",
+
+        "//comment2":"4k key",
+        "key4_1": "./assets/image/key4_1.png",
+        "key4_2": "./assets/image/key4_2.png",
+        "key4_3": "./assets/image/key4_3.png",
+        "key4_4": "./assets/image/key4_4.png",
+
+        "//comment3":"6k key",
+        "key6_1": "./assets/image/key6_1.png",
+        "key6_2": "./assets/image/key6_2.png",
+        "key6_3": "./assets/image/key6_3.png",
+        "key6_4": "./assets/image/key6_4.png",
+        "key6_5": "./assets/image/key6_5.png",
+        "key6_6": "./assets/image/key6_6.png"
+
+
     },
     "gifs": {
         "character_left": "./assets/gif/Character/character_left.gif",

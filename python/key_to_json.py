@@ -54,7 +54,7 @@ chart_json = {
 }
 
 # Define the output JSON file path
-output_file_path = "chart.json"
+output_file_path = "python/chart4k.json"
 
 # Write the JSON data to the file with pretty formatting
 try:

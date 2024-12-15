@@ -30,10 +30,10 @@ private:
     InputManager* IM;
     std::function<void(const std::string&)> change_scene;
 
-    ALLEGRO_BITMAP* background,*pause_Img;
+    ALLEGRO_BITMAP* background,*pause_Img,*key1,*key2,*key3,*key4;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
-    std::string background_key, bgm_key,pause_key,dance_key,text_key;
+    std::string background_key, bgm_key,pause_key,dance_key,text_key,key1_key,key2_key,key3_key,key4_key;
     bool is_pause;
     ALGIF_ANIMATION *gif;
     ALLEGRO_FONT *font,*large_font;

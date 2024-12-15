@@ -20,6 +20,10 @@ void Nyancat4kScene::read_configs(){
     // Now read the keys
     background_key = j.value("background", "Nyancat4k_background");
     pause_key = j.value("pause_Img", "Nyancat4k_pause");
+    key1_key = j.value("key1", "key4_1");
+    key2_key = j.value("key2", "key4_2");
+    key3_key = j.value("key3", "key4_3");
+    key4_key = j.value("key4", "key4_4");
     dance_key = j.value("dance_gif", "dance");
     bgm_key = j.value("bgm", "menu_bgm");
     text_key = j.value("score_text", "caviar_dream");
@@ -30,6 +34,10 @@ void Nyancat4kScene::init() {
     
     background = RM->get_image(background_key);
     pause_Img = RM->get_image(pause_key);
+    key1 = RM->get_image(key1_key);
+    key2 = RM->get_image(key2_key);
+    key3 = RM->get_image(key3_key);
+    key4 = RM->get_image(key4_key);
     gif = RM->get_gif(dance_key);
     font = RM->get_font(text_key,45);
     large_font = RM->get_font(text_key,60);
@@ -46,6 +54,11 @@ bool Nyancat4kScene::update() {
 void Nyancat4kScene::draw() {
     if(!background) return;
     al_draw_bitmap(background, 0, 0, 0);   
+    al_draw_bitmap(key1, 0, -200, 0);
+    al_draw_bitmap(key2, 0, -200, 0);   
+    al_draw_bitmap(key3, 0, -200, 0);
+    al_draw_bitmap(key4, 0, -200, 0);
+    
      
     // for (auto &btn : buttons) {
     //     btn.draw();
