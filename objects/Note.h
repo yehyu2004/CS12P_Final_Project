@@ -10,7 +10,7 @@
 #include "../core/InputManager.h"
 
 const std::vector<std::pair<double,double>> init_coords_4k = {
-    {400, 0}, {625, 0}, {850, 0}, {1075,0},
+    {400, 0}, {630, 0}, {860, 0}, {1090,0},
 };
 
 const std::vector<std::pair<double,double>> init_coords_6k = {
@@ -19,15 +19,16 @@ const std::vector<std::pair<double,double>> init_coords_6k = {
 };
 
 const std::vector<std::array<int,3>> key_note_color_4k = {
-    {255,0,0}, {0,255,0}, {0,0,255}, {255,255,0}
+    {132,13,0}, {255,135,0}, {32,13,0}, {255,135,0}
 };
 
 const std::vector<std::array<int,3>> key_note_color_6k = {
-    {255,0,0}, {0,255,0}, {0,0,255},
-    {255,255,0}, {255,0,255}, {0,255,255}
+    {39,86,31}, {132,13,0}, {255,135,0},
+    {132,13,0}, {255,135,0}, {39,86,31}
 };
 
-const int NOTE_WIDTH = 150;
+const int NOTE_WIDTH_4k = 220;
+const int NOTE_WIDTH_6k = 150;
 const int NOTE_HEIGHT = 100;
 const double FALL_SPEED = 30;
 const double FALL_LENGTH = 925;

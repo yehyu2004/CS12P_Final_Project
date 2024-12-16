@@ -10,7 +10,7 @@
 #include "scenes/MusicstartScene/MusicstartScene.h"
 #include "scenes/Musicstart2Scene/Musicstart2Scene.h"
 #include "Utils.h"
-
+#include <iostream>
 Game::Game() {
     // Initialize resource, config, and input managers
     RM = ResourceManager::get_instance();
@@ -159,7 +159,7 @@ void Game::change_scene(const std::string& scene_name) {
     auto scene_changer = [this](const std::string &s) {
         this->change_scene(s);
     };
-
+    std::cout<<scene_name<<'\n';
     // Decide which scene to create based on scene_name
     if (scene_name == "MENU") {
         current_scene = make_scene<MenuScene>(RM, CM, IM, scene_changer);

@@ -13,6 +13,7 @@ void MenuScene::init() {
 
     // Example buttons: 
     // Each button when clicked will call change_scene with the desired scene name
+
     Button play_music_btn(1300, 500, RM->get_image("play_music_btn"), [&](){ if(music) RM->toggle_sound(music); change_scene("SONG");});
     Button gallery_btn(1300, 700, RM->get_image("gallery_btn"), [&](){ if(music) RM->toggle_sound(music); change_scene("GALLERY");});
     Button character_btn(1300, 900, RM->get_image("character_btn"), [&](){ if(music) RM->toggle_sound(music); change_scene("CHARACTER");});

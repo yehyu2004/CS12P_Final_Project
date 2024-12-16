@@ -36,7 +36,12 @@ void Note::draw() {
         note_visual_height += hold_length_pixels;
     }
 
-    al_draw_filled_rectangle(x, y, x + NOTE_WIDTH, y + note_visual_height, al_map_rgb(R, G, B));
+    if (game_type == "4k") {
+        al_draw_filled_rectangle(x, y, x + NOTE_WIDTH_4k, y + note_visual_height, al_map_rgb(R, G, B));
+    } else { // "6k"
+        al_draw_filled_rectangle(x, y, x + NOTE_WIDTH_6k, y + note_visual_height, al_map_rgb(R, G, B));
+    }
+    
 }
 
 void Note::update() {
