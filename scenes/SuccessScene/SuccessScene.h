@@ -38,7 +38,7 @@ private:
     ALLEGRO_BITMAP* background;
     std::vector<Button> buttons;
     ALLEGRO_SAMPLE_INSTANCE* music;
-    ALLEGRO_FONT* font;
+    ALLEGRO_FONT *font, *font2;
 
     std::string background_key, bgm_key;
 

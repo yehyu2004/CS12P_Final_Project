@@ -33,6 +33,7 @@ void SuccessScene::init() {
 
     // Load a font for drawing the results
     font = RM->get_font("caviar_dreams", 60); // Ensure this font key is available
+    font2 = RM->get_font("caviar_dreams", 70); // Ensure this font key is available
 }
 
 bool SuccessScene::update() {
@@ -50,12 +51,18 @@ void SuccessScene::draw() {
         btn.draw();
     }
 
+
+    ALLEGRO_COLOR perfect_color = al_map_rgb(49, 62, 79);
+    ALLEGRO_COLOR good_color = al_map_rgb(84, 130, 50);
+    ALLEGRO_COLOR miss_color = al_map_rgb(193, 0, 0);
+    ALLEGRO_COLOR score_color = al_map_rgb(255,102,153);
+
     // Display the results (perfect, good, miss, score)
     // Position these as per your UI design:
-    al_draw_text(font, al_map_rgb(0, 0, 0), 960, 400, ALLEGRO_ALIGN_CENTRE, ("Perfect: " + std::to_string(perfect_count)).c_str());
-    al_draw_text(font, al_map_rgb(0, 0, 0), 960, 480, ALLEGRO_ALIGN_CENTRE, ("Good: " + std::to_string(good_count)).c_str());
-    al_draw_text(font, al_map_rgb(0, 0, 0), 960, 560, ALLEGRO_ALIGN_CENTRE, ("Miss: " + std::to_string(miss_count)).c_str());
-    al_draw_text(font, al_map_rgb(0, 0, 0), 960, 640, ALLEGRO_ALIGN_CENTRE, ("Score: " + std::to_string(score)).c_str());
+    al_draw_text(font, perfect_color, 630, 555, ALLEGRO_ALIGN_RIGHT, (std::to_string(perfect_count)).c_str());
+    al_draw_text(font, good_color, 630, 675, ALLEGRO_ALIGN_RIGHT, (std::to_string(good_count)).c_str());
+    al_draw_text(font, miss_color, 630, 795, ALLEGRO_ALIGN_RIGHT, (std::to_string(miss_count)).c_str());
+    al_draw_text(font2, score_color, 250, 200, ALLEGRO_ALIGN_CENTRE, (std::to_string(score)).c_str());
 }
 
 void SuccessScene::handle_input() {
