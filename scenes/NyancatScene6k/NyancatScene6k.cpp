@@ -117,13 +117,16 @@ void Nyancat6kScene::handle_input() {
     if (IM->was_key_pressed(ALLEGRO_KEY_N)) {
         RM->toggle_sound(music);
         change_scene("LOSE");
+        return;
     }
 
     if(is_pause&&IM->was_key_pressed(ALLEGRO_KEY_R)){
         change_scene("NYANCAT6K");
+        return;
     }
 
     if(is_pause&&IM->was_key_pressed(ALLEGRO_KEY_ESCAPE)){
         change_scene("SONG");
+        return;
     }
 }

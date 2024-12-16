@@ -12,6 +12,7 @@ GameHandler::GameHandler(std::string chart_path, std::string song_config_path, s
     good_count = 0;
     miss_count = 0;
     start_time = al_current_time();
+    recover_time = al_current_time();
     pause_time = 0;
     is_init = true;
     is_paused = false;
@@ -64,9 +65,9 @@ void GameHandler::draw() {
     int screen_height = al_get_display_height(al_get_current_display());
 
     int bar_width = 300;
-    int bar_height = 100;
+    int bar_height = 80;
     int bar_x = screen_width - bar_width - 50; 
-    int bar_y = screen_height - bar_height - 50;
+    int bar_y = screen_height - bar_height - 30;
 
     float health_ratio = (float)health / (float)HEALTH_MAX;
     int fill_width = (int)(bar_width * health_ratio);
@@ -75,7 +76,7 @@ void GameHandler::draw() {
     al_draw_filled_rectangle(bar_x, bar_y, bar_x + fill_width, bar_y + bar_height, al_map_rgb(255,100,100));
 
     std::string health_text = std::to_string(health) + "%";
-    al_draw_text(font, al_map_rgb(255,255,255), bar_x + bar_width/2, bar_y + bar_height/2 - 10, ALLEGRO_ALIGN_CENTRE, health_text.c_str());
+    al_draw_text(font, al_map_rgb(255,255,255), bar_x + bar_width/2, bar_y + bar_height/2 - 30, ALLEGRO_ALIGN_CENTRE, health_text.c_str());
 }
 
 void GameHandler::toggle_pause() {
@@ -83,6 +84,7 @@ void GameHandler::toggle_pause() {
         pause_time = al_current_time();
     } else {
         start_time += al_current_time() - pause_time;
+        recover_time += al_current_time() - pause_time;
     }
     is_paused = !is_paused;
 }
@@ -92,6 +94,11 @@ void GameHandler::update() {
 
     double current_time = (al_current_time() - start_time) * 1000;
     double travel_time_ms = (FALL_LENGTH / FALL_SPEED) * (1000.0 / FPS);
+
+    if(current_time - recover_time >= 5000){
+        adjust_health(HEALTH_LOSS_MISS);
+        recover_time = current_time;
+    }
 
     while (!notes.empty()) {
         const Note &front_note = notes.front();

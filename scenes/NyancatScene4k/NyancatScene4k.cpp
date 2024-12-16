@@ -61,10 +61,12 @@ bool Nyancat4kScene::update() {
             SuccessScene::setResults(game->get_perfect(), game->get_good(), game->get_miss(), game->get_score());
             RM->toggle_sound(music);
             change_scene("SUCCESS");
+            return true;
         }
         if (game->lost()){
             RM->toggle_sound(music);
             change_scene("LOSE");
+            return true;
         }
     }
     return true;
@@ -120,18 +122,22 @@ void Nyancat4kScene::handle_input() {
         }
         RM->toggle_sound(music);
         change_scene("SUCCESS");
+        return;
     }
 
     if (IM->was_key_pressed(ALLEGRO_KEY_N)) {
         RM->toggle_sound(music);
         change_scene("LOSE");
+        return;
     }
 
     if(is_pause&&IM->was_key_pressed(ALLEGRO_KEY_R)){
         change_scene("NYANCAT4K");
+        return;
     }
 
     if(is_pause&&IM->was_key_pressed(ALLEGRO_KEY_ESCAPE)){
         change_scene("SONG");
+        return;
     }
 }

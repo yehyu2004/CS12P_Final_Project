@@ -39,6 +39,7 @@ private:
     double start_time;
     double song_duration;
     double pause_time;
+    double recover_time;
     bool is_init;
     bool is_paused;
 

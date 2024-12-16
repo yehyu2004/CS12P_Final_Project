@@ -103,16 +103,19 @@ void SongScene::handle_input() {
     }
 
     if(IM->was_key_pressed(ALLEGRO_KEY_P)){
-        RM->toggle_sound(music);
+        if(music) RM->toggle_sound(music);
         change_scene("MENU");
+        return;
     }
 
     if(IM->was_key_pressed(ALLEGRO_KEY_4)){
-        RM->toggle_sound(music);
+        if(music) RM->toggle_sound(music);
         change_scene("MUSICSTART");
+        return;
     }
     if(IM->was_key_pressed(ALLEGRO_KEY_6)){
-        RM->toggle_sound(music);
+        if(music) RM->toggle_sound(music);
         change_scene("MUSICSTART2");
+        return;
     }
 }
