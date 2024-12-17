@@ -35,6 +35,10 @@ void GameHandler::draw() {
         note.draw();
     }
 
+    for (auto &note : current_hold_notes) {
+        note.draw();
+    }
+
     for (auto &[display_time, score_data] : current_scores) {
         SCORE_TYPE score_type = score_data.first;
         ALLEGRO_COLOR color;
@@ -105,7 +109,10 @@ void GameHandler::update() {
         double spawn_time = front_note.get_time() - travel_time_ms;
 
         if (spawn_time <= current_time) {
-            current_notes.push_back(front_note);
+            if(front_note.is_hold_note())
+                current_hold_notes.push_back(front_note);
+            else
+                current_notes.push_back(front_note);
             notes.pop();
         } else {
             break;
@@ -126,6 +133,10 @@ void GameHandler::update() {
     }
 
     for (auto &note : current_notes) {
+        note.update();
+    }
+
+    for (auto &note : current_hold_notes) {
         note.update();
     }
 }
@@ -160,6 +171,25 @@ void GameHandler::handle_input() {
                     adjust_health(HEALTH_GAIN_PERFECT);
                 }
                 current_notes.pop_front();
+            }
+        }
+
+        for(Note &note : current_hold_notes){
+            SCORE_TYPE current_note_score = note.check_score(col_index);
+            if (current_note_score != SCORE_TYPE::NONE) {
+                if (current_note_score == SCORE_TYPE::MISS) {
+                    miss_count++;
+                    current_scores.push_back({current_time + SCORE_TIME, {SCORE_TYPE::MISS, col_index}});
+                    adjust_health(-HEALTH_LOSS_MISS);
+                } else if (current_note_score == SCORE_TYPE::GOOD) {
+                    good_count++;
+                    current_scores.push_back({current_time + SCORE_TIME, {SCORE_TYPE::GOOD, col_index}});
+                    adjust_health(HEALTH_GAIN_GOOD);
+                } else if (current_note_score == SCORE_TYPE::PERFECT) {
+                    perfect_count++;
+                    current_scores.push_back({current_time + SCORE_TIME, {SCORE_TYPE::PERFECT, col_index}});
+                    adjust_health(HEALTH_GAIN_PERFECT);
+                }
             }
         }
     };

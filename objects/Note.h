@@ -49,7 +49,7 @@ private:
     std::string type;     // "tap" or "hold"
     std::string game_type;
     double duration;       // duration in ms (only for hold notes, 0 for tap)
-
+    bool is_hit;
     bool check_in_range(double left, double right);
 
 public:
@@ -64,6 +64,7 @@ public:
     double get_col() const { return col; }
     double get_duration() const { return duration; }
     bool is_hold_note() const { return (type == "hold"); }
+    bool is_hitted() const { return (is_hit); }
 };
 
 #endif

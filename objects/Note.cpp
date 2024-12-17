@@ -55,6 +55,11 @@ bool Note::check_in_range(double left, double right) {
 SCORE_TYPE Note::check_score(int key) {
     if (key != col) return SCORE_TYPE::NONE;
 
+    if(is_hold_note()){
+        is_hit = true;
+        return SCORE_TYPE::PERFECT;
+    }
+
     double lower_perf = FALL_LENGTH - PERFECT_FRAME * (1.0 / FPS) * FALL_SPEED;
     double upper_perf = FALL_LENGTH + PERFECT_FRAME * (1.0 / FPS) * FALL_SPEED;
     double lower_good = FALL_LENGTH - GOOD_FRAME * (1.0 / FPS) * FALL_SPEED;

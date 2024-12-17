@@ -28,7 +28,7 @@ private:
     ChartLoader *CL;
 
     std::queue<Note> notes;
-    std::deque<Note> current_notes;
+    std::deque<Note> current_notes, current_hold_notes;
     std::deque<std::pair<double, std::pair<SCORE_TYPE, int>>> current_scores;
 
     std::string game_type;
