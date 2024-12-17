@@ -53,10 +53,12 @@ bool Nyancat6kScene::update() {
             SuccessScene::setResults(game->get_perfect(), game->get_good(), game->get_miss(), game->get_score());
             RM->toggle_sound(music);
             change_scene("SUCCESS");
+            return true;
         }
         if (game->lost()){
             RM->toggle_sound(music);
             change_scene("LOSE");
+            return true;
         }
     }
     return true; 
